@@ -14,6 +14,7 @@ import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
 import android.support.design.widget.NavigationView
 import android.support.v4.widget.DrawerLayout
+import android.view.View
 import com.a1tt.security.R.id.drawer_layout
 import com.a1tt.security.R.id.nav_view
 
@@ -23,18 +24,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
 
-       val mToolbar : Toolbar = findViewById(R.id.myToolbar) as Toolbar
+        val mToolbar : Toolbar = findViewById<View>(R.id.myToolbar) as Toolbar
         setSupportActionBar(mToolbar)
 
 //        val actionBar : ActionBar? = getSupportActionBar()
 //        actionBar?.title = "test"
 
+        val drawer = findViewById<View>(R.id.drawer_layout) as DrawerLayout
         val toggle = ActionBarDrawerToggle(
                 this, findViewById(R.id.drawer_layout), mToolbar, R.string.open, R.string.close)
-        (findViewById(R.id.drawer_layout) as DrawerLayout).addDrawerListener(toggle)
+        drawer.addDrawerListener(toggle)
         toggle.syncState()
 
-        (findViewById(R.id.nav_view) as NavigationView).setNavigationItemSelectedListener(this)
+        val navigationView = findViewById(R.id.nav_view) as NavigationView
+        navigationView.setNavigationItemSelectedListener(this)
 
         val fm: FragmentManager = supportFragmentManager
         var fragment: Fragment? = fm.findFragmentById(R.id.fragment_container)
@@ -73,9 +76,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
-
+            R.id.app_list -> changeFragment(TargetAppListFragment(), "Installed apps")
+            R.id.nav_camera -> {
+                supportActionBar?.title = "Analyses result"
+                changeFragment(ResultFragment(), "cards")
+            }
+            R.id.nav_gallery -> changeFragment(ResultFragment(), "gallery")
+            R.id.nav_slideshow,
+            R.id.nav_manage,
+            R.id.nav_share,
+            R.id.nav_send -> {}
         }
-//        drawer_layout.closeDrawer(GravityCompat.START)
+        val drawer = findViewById<View>(R.id.drawer_layout) as DrawerLayout
+        drawer.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    private fun changeFragment(fragment: Fragment, tag: String) {
+        val fragmentManager = supportFragmentManager
+        val exist = fragmentManager.findFragmentByTag(tag) ?: fragment
+        supportFragmentManager.beginTransaction().replace(R.id.fragment_container, exist, tag).commit()
     }
 }
