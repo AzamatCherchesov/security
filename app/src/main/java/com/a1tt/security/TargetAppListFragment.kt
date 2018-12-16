@@ -1,8 +1,11 @@
 package com.a1tt.security
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Message
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -21,17 +24,24 @@ class TargetAppListFragment : Fragment() {
         targetApplicationRecyclerView = view.findViewById(R.id.target_app_list_recycler_view) as RecyclerView
         targetApplicationRecyclerView.layoutManager = LinearLayoutManager(activity)
 
-        updateUi()
+        @SuppressLint("HandlerLeak")
+        val mHandler = object : Handler() {
+            override fun handleMessage(msg: Message) {
+                when (msg.what) {
+                    1 ->  {
+                        val apps: List<TargetApplication> = mTargetApplications
+                        mAdapter = TargetAppAdapter(apps)
+                        targetApplicationRecyclerView.adapter = mAdapter
+                    }
+                    else -> {
 
+                    }
+                }
+            }
+        }
+
+        Thread(AppListSheduler(activity as Context, mHandler)).start()
         return view
-    }
-
-    fun updateUi() {
-        //TODO new thread
-        val appsLab = TargetAppLab(activity as Context)
-        val apps: List<TargetApplication> = appsLab.targetApplications
-        mAdapter = TargetAppAdapter(apps)
-        targetApplicationRecyclerView.adapter = mAdapter
     }
 
     inner class TargetAppHolder(itemView: View) : RecyclerView.ViewHolder(itemView) , View.OnClickListener {
@@ -90,10 +100,11 @@ class TargetAppListFragment : Fragment() {
             p0.bindTargetApplication(targetApplication)
         }
 
-        val targetApps : List<TargetApplication>
+        val targetApps : List<TargetApplication> = apps
 
-        init{
-            targetApps = apps
-        }
+    }
+
+    companion object {
+        var mTargetApplications: MutableList<TargetApplication> = mutableListOf<TargetApplication>()
     }
 }
