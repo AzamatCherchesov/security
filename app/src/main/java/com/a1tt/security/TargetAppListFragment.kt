@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -20,6 +21,7 @@ class TargetAppListFragment : Fragment() {
     lateinit var mAdapter: TargetAppAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        (activity as AppCompatActivity).supportActionBar?.title = "Installed apps"
         val view: View = inflater.inflate(R.layout.target_app_list, container, false)
         targetApplicationRecyclerView = view.findViewById(R.id.target_app_list_recycler_view) as RecyclerView
         targetApplicationRecyclerView.layoutManager = LinearLayoutManager(activity)
@@ -43,6 +45,7 @@ class TargetAppListFragment : Fragment() {
         Thread(AppListSheduler(activity as Context, mHandler)).start()
         return view
     }
+
 
     inner class TargetAppHolder(itemView: View) : RecyclerView.ViewHolder(itemView) , View.OnClickListener {
         override fun onClick(p0: View?) {

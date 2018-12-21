@@ -2,6 +2,7 @@ package com.a1tt.security
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
@@ -19,6 +20,7 @@ class ResultFragment : Fragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
+        (activity as AppCompatActivity).supportActionBar?.title = "Analyses result"
         val view = inflater.inflate(R.layout.cards_fragment_layout, container, false)
         cardsRecycler = view.findViewById<View>(R.id.cards_recycler) as RecyclerView
         cardsRecycler!!.layoutManager =

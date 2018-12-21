@@ -18,6 +18,7 @@ import android.view.View
 import com.a1tt.security.R.id.drawer_layout
 import com.a1tt.security.R.id.nav_view
 
+
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener  {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,22 +40,27 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val navigationView = findViewById(R.id.nav_view) as NavigationView
         navigationView.setNavigationItemSelectedListener(this)
 
-        val fm: FragmentManager = supportFragmentManager
-        var fragment: Fragment? = fm.findFragmentById(R.id.fragment_container)
+//        val fm: FragmentManager = supportFragmentManager
+//        var fragment: Fragment? = fm.findFragmentById(R.id.fragment_container)
+//
+//        if (fragment == null) {
+//            fragment = TargetAppListFragment()
+//            fm.beginTransaction()
+//                    .add(R.id.fragment_container, fragment)
+//                    .commit()
+//        }
 
-        if (fragment == null) {
-            fragment = TargetAppListFragment()
-            fm.beginTransaction()
-                    .add(R.id.fragment_container, fragment)
-                    .commit()
-        }
+        router = Router(this, R.id.fragment_container)
+        if (savedInstanceState == null) router.navigateTo(false, ::TargetAppListFragment)
     }
 
     override fun onBackPressed() {
         if ( (findViewById(R.id.drawer_layout) as DrawerLayout).isDrawerOpen(GravityCompat.START)) {
             (findViewById(R.id.drawer_layout) as DrawerLayout).closeDrawer(GravityCompat.START)
         } else {
-            super.onBackPressed()
+            if (!router.navigateBack()) {
+                super.onBackPressed()
+            }
         }
     }
 
@@ -76,13 +82,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
-            R.id.app_list -> changeFragment(TargetAppListFragment(), "Installed apps")
-            R.id.nav_camera -> {
-                supportActionBar?.title = "Analyses result"
-                changeFragment(ResultFragment(), "cards")
+            R.id.app_list -> {
+                changeFragment(TargetAppListFragment(), "Installed apps")
             }
-            R.id.nav_gallery -> changeFragment(ResultFragment(), "gallery")
-            R.id.nav_slideshow,
+            R.id.nav_camera -> {
+                router.navigateTo(fragmentFactory = ::ResultFragment)
+//                changeFragment(ResultFragment(), "cards")
+            }
+            R.id.nav_gallery -> {
+                router.navigateTo(fragmentFactory = ::ScanURLFragment)
+                //changeFragment(ScanURLFragment(), "gallery")
+            }
             R.id.nav_manage,
             R.id.nav_share,
             R.id.nav_send -> {}
@@ -92,7 +102,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
-    private fun changeFragment(fragment: Fragment, tag: String) {
+    companion object {
+        public lateinit var router  : Router
+    }
+
+    public fun changeFragment(fragment: Fragment, tag: String) {
         val fragmentManager = supportFragmentManager
         val exist = fragmentManager.findFragmentByTag(tag) ?: fragment
         supportFragmentManager.beginTransaction().replace(R.id.fragment_container, exist, tag).commit()
