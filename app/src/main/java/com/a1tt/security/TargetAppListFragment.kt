@@ -22,29 +22,40 @@ class TargetAppListFragment : Fragment() {
     lateinit var targetApplicationRecyclerView: RecyclerView
     lateinit var mAdapter: TargetAppAdapter
 
+    fun filterAppList(p0 : String?) {
+        if (p0 != null) {
+            Thread(AppListSheduler(activity as Context, mHandler, p0)).start()
+        }
+        else {
+            Thread(AppListSheduler(activity as Context, mHandler, null)).start()
+        }
+    }
+
+    @SuppressLint("HandlerLeak")
+    val mHandler = object : Handler() {
+        override fun handleMessage(msg: Message) {
+            when (msg.what) {
+                1 ->  {
+                    val apps: List<TargetApplication> = mTargetApplications
+                    mAdapter = TargetAppAdapter(apps)
+                    targetApplicationRecyclerView.adapter = mAdapter
+                }
+                else -> {
+
+                }
+            }
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         (activity as AppCompatActivity).supportActionBar?.title = "Installed apps"
         val view: View = inflater.inflate(R.layout.target_app_list, container, false)
         targetApplicationRecyclerView = view.findViewById(R.id.target_app_list_recycler_view) as RecyclerView
         targetApplicationRecyclerView.layoutManager = LinearLayoutManager(activity)
 
-        @SuppressLint("HandlerLeak")
-        val mHandler = object : Handler() {
-            override fun handleMessage(msg: Message) {
-                when (msg.what) {
-                    1 ->  {
-                        val apps: List<TargetApplication> = mTargetApplications
-                        mAdapter = TargetAppAdapter(apps)
-                        targetApplicationRecyclerView.adapter = mAdapter
-                    }
-                    else -> {
 
-                    }
-                }
-            }
-        }
 
-        Thread(AppListSheduler(activity as Context, mHandler)).start()
+        Thread(AppListSheduler(activity as Context, mHandler, null)).start()
         return view
     }
 
