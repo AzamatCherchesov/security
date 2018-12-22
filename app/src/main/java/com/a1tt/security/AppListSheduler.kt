@@ -9,7 +9,7 @@ import com.a1tt.security.TargetAppListFragment.Companion.mTargetApplications
 class AppListSheduler(val context: Context, val handler: Handler, val filterStr: String?) : Runnable {
 
     override fun run() {
-        val targetApplications: MutableList<TargetApplication> = mutableListOf<TargetApplication>()
+        val targetApplications: MutableList<TargetApplication> = mutableListOf()
         val packageManager: PackageManager = context.packageManager
         val packs: List<PackageInfo> = packageManager.getInstalledPackages(0)
         var i = 0

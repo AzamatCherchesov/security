@@ -115,7 +115,7 @@ class TargetAppListFragment : Fragment() {
         }
 
         override fun onBindViewHolder(p0: TargetAppHolder, p1: Int) {
-            val targetApplication: TargetApplication = targetApps.get(p1)
+            val targetApplication: TargetApplication = targetApps[p1]
 //            p0.mTextView.text = targetApplication.appName
             p0.bindTargetApplication(targetApplication)
         }
@@ -125,6 +125,6 @@ class TargetAppListFragment : Fragment() {
     }
 
     companion object {
-        var mTargetApplications: MutableList<TargetApplication> = mutableListOf<TargetApplication>()
+        var mTargetApplications: MutableList<TargetApplication> = mutableListOf()
     }
 }

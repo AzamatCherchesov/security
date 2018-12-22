@@ -41,20 +41,18 @@ class ScanURLFragment : Fragment() {
         val view = inflater.inflate(R.layout.scan_url_fragment, container, false)
         scanURLButton = view.findViewById<View>(R.id.scanButton) as Button
         inputText = view.findViewById<View>(R.id.inputText) as TextView
-        scanURLButton?.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(p0: View?) {
-                inputText?.clearFocus()
-                scanURLButton?.requestFocus()
-                Thread(Runnable {
-                    makePostRequest()
+        scanURLButton?.setOnClickListener {
+            inputText?.clearFocus()
+            scanURLButton?.requestFocus()
+            Thread(Runnable {
+                makePostRequest()
 
 
-                    (activity!!.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(activity!!.currentFocus.windowToken, 0)
-                    router.navigateBack()
-                    //changeFragment(TargetAppListFragment(), "Installed apps")
-                }).start()
-            }
-        })
+                (activity!!.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(activity!!.currentFocus.windowToken, 0)
+                router.navigateBack()
+                //changeFragment(TargetAppListFragment(), "Installed apps")
+            }).start()
+        }
         return view
     }
 
@@ -146,11 +144,4 @@ class ScanURLFragment : Fragment() {
         }
         connection.disconnect()
     }
-
-    fun changeFragment(fragment: Fragment, tag: String) {
-        val fragmentManager = activity!!.supportFragmentManager
-        val exist = fragmentManager.findFragmentByTag(tag) ?: fragment
-        activity!!.supportFragmentManager.beginTransaction().replace(R.id.fragment_container, exist, tag).commit()
-    }
-
 }

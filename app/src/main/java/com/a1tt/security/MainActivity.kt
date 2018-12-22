@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawer.addDrawerListener(toggle)
         toggle.syncState()
 
-        val navigationView = findViewById(R.id.nav_view) as NavigationView
+        val navigationView = findViewById<NavigationView>(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener(this)
 
 //        val fm: FragmentManager = supportFragmentManager
@@ -50,8 +50,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onBackPressed() {
-        if ( (findViewById(R.id.drawer_layout) as DrawerLayout).isDrawerOpen(GravityCompat.START)) {
-            (findViewById(R.id.drawer_layout) as DrawerLayout).closeDrawer(GravityCompat.START)
+        if ( (findViewById<DrawerLayout>(R.id.drawer_layout)).isDrawerOpen(GravityCompat.START)) {
+            (findViewById<DrawerLayout>(R.id.drawer_layout)).closeDrawer(GravityCompat.START)
         } else {
             if (!router.navigateBack()) {
                 super.onBackPressed()
@@ -75,12 +75,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val searchView : SearchView = menu.findItem(R.id.search).actionView as SearchView
 
-        searchView.setOnCloseListener(object : SearchView.OnCloseListener {
-            override fun onClose(): Boolean {
-                doSearch(null)
-                return false
-            }
-        })
+        searchView.setOnCloseListener {
+            doSearch(null)
+            false
+        }
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
             override fun onQueryTextSubmit(p0: String?): Boolean {
@@ -132,12 +130,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     companion object {
-        public lateinit var router  : Router
+        lateinit var router  : Router
     }
 
-    public fun changeFragment(fragment: Fragment, tag: String) {
-        val fragmentManager = supportFragmentManager
-        val exist = fragmentManager.findFragmentByTag(tag) ?: fragment
-        supportFragmentManager.beginTransaction().replace(R.id.fragment_container, exist, tag).commit()
-    }
 }
