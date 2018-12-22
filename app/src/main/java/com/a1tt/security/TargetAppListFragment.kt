@@ -3,6 +3,7 @@ package com.a1tt.security
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
@@ -15,6 +16,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.a1tt.security.R.drawable.ic_app_checked_good
 
 class TargetAppListFragment : Fragment() {
     lateinit var targetApplicationRecyclerView: RecyclerView
@@ -66,6 +68,7 @@ class TargetAppListFragment : Fragment() {
         val packageName : TextView
         val result : TextView
         val iconDrawable : ImageView
+        val resultIcon : ImageView
 
         lateinit var application: TargetApplication
         init{
@@ -73,6 +76,7 @@ class TargetAppListFragment : Fragment() {
             packageName = itemView.findViewById(R.id.PackageName) as TextView
             iconDrawable = itemView.findViewById(R.id.imageView2) as ImageView
             result = itemView.findViewById(R.id.ResultInfo) as TextView
+            resultIcon = itemView.findViewById(R.id.view) as ImageView
             itemView.setOnClickListener(this)
         }
 
@@ -81,6 +85,10 @@ class TargetAppListFragment : Fragment() {
             appName.text = application.appName
             packageName.text = application.packageName
             result.text = application.result
+            if (result.text != null && result.text != "") {
+                resultIcon.setImageResource(ic_app_checked_good)
+                resultIcon.setColorFilter(Color.GREEN)
+            }
             iconDrawable.setImageDrawable(application.icon)
             //TODO::
         }
@@ -89,7 +97,7 @@ class TargetAppListFragment : Fragment() {
     inner class TargetAppAdapter(apps: List<TargetApplication>) : RecyclerView.Adapter<TargetAppHolder>() {
         override fun onCreateViewHolder(p0: ViewGroup, p1: Int): TargetAppHolder {
             val layoutInflater: LayoutInflater = LayoutInflater.from(activity)
-            val view: View = layoutInflater.inflate(R.layout.target_app_fragment, p0, false)
+            val view: View = layoutInflater.inflate(R.layout.card_appinfo_view, p0, false)
             return TargetAppHolder(view)
         }
 

@@ -3,20 +3,15 @@ package com.a1tt.security
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
 import android.support.v4.view.GravityCompat
-import android.support.v7.app.ActionBar
 import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.widget.ActionBarContainer
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
-import kotlinx.android.synthetic.main.activity_main.*
 import android.support.design.widget.NavigationView
 import android.support.v4.widget.DrawerLayout
 import android.view.View
-import com.a1tt.security.R.id.drawer_layout
-import com.a1tt.security.R.id.nav_view
+import com.a1tt.security.AnalysResults.ResultFragment
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener  {
