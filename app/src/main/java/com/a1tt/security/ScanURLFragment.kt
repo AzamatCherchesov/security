@@ -1,17 +1,9 @@
 package com.a1tt.security
 
-import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.DialogInterface
 import android.os.Bundle
-import android.support.constraint.R.id.invisible
-import android.support.design.widget.Snackbar
-import android.support.transition.Visibility
 import android.support.v4.app.Fragment
-import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -27,14 +19,11 @@ import com.a1tt.security.Consts.Companion.SCANS_ARR
 import com.a1tt.security.Consts.Companion.SCAN_DATE_STR
 import com.a1tt.security.Consts.Companion.URL_STR
 import com.a1tt.security.MainActivity.Companion.router
-import com.a1tt.security.R.id.gone
-import kotlinx.android.synthetic.main.scan_url_fragment.*
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.io.OutputStream
 import java.io.OutputStreamWriter
-import java.net.HttpURLConnection
 import java.net.URL
 import javax.net.ssl.HttpsURLConnection
 
@@ -70,7 +59,7 @@ class ScanURLFragment : Fragment() {
     }
 
     fun makePostRequest() {
-        lateinit var scan_id : String
+        lateinit var scan_id: String
 
         // Set up request
         val connection: HttpsURLConnection = URL("https://www.virustotal.com/vtapi/v2/url/scan").openConnection() as HttpsURLConnection
@@ -114,7 +103,7 @@ class ScanURLFragment : Fragment() {
         makeGetRequest(scan_id)
     }
 
-    fun makeGetRequest(resource : String) {
+    fun makeGetRequest(resource: String) {
         Log.e("A1tt", "test")
         val connection: HttpsURLConnection = URL("https://www.virustotal.com/vtapi/v2/url/report").openConnection() as HttpsURLConnection
         connection.requestMethod = "GET"

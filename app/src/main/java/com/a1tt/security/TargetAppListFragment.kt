@@ -2,7 +2,6 @@ package com.a1tt.security
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
@@ -22,11 +21,10 @@ class TargetAppListFragment : Fragment() {
     lateinit var targetApplicationRecyclerView: RecyclerView
     lateinit var mAdapter: TargetAppAdapter
 
-    fun filterAppList(p0 : String?) {
+    fun filterAppList(p0: String?) {
         if (p0 != null) {
             Thread(AppListSheduler(activity as Context, mHandler, p0)).start()
-        }
-        else {
+        } else {
             Thread(AppListSheduler(activity as Context, mHandler, null)).start()
         }
     }
@@ -35,7 +33,7 @@ class TargetAppListFragment : Fragment() {
     val mHandler = object : Handler() {
         override fun handleMessage(msg: Message) {
             when (msg.what) {
-                1 ->  {
+                1 -> {
                     val apps: List<TargetApplication> = mTargetApplications
                     mAdapter = TargetAppAdapter(apps)
                     targetApplicationRecyclerView.adapter = mAdapter
@@ -60,29 +58,29 @@ class TargetAppListFragment : Fragment() {
     }
 
 
-    inner class TargetAppHolder(itemView: View) : RecyclerView.ViewHolder(itemView) , View.OnClickListener {
+    inner class TargetAppHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         override fun onClick(p0: View?) {
-            println("A1tt"  + application.appName + " clicked!!!!")
+            println("A1tt" + application.appName + " clicked!!!!")
 
             //make all methods private
             //TODO вынести listener - принять его как аргумент
-            if(application.result == null) {
+            if (application.result == null) {
                 CheckAppFragment().setName(application.appName).show(fragmentManager, "")
                 //TODO:: DIALOG
-            }
-            else {
+            } else {
                 //TODO::
             }
         }
 
-        val appName : TextView
-        val packageName : TextView
-        val result : TextView
-        val iconDrawable : ImageView
-        val resultIcon : ImageView
+        val appName: TextView
+        val packageName: TextView
+        val result: TextView
+        val iconDrawable: ImageView
+        val resultIcon: ImageView
 
         lateinit var application: TargetApplication
-        init{
+
+        init {
             appName = itemView.findViewById(R.id.AppName) as TextView
             packageName = itemView.findViewById(R.id.PackageName) as TextView
             iconDrawable = itemView.findViewById(R.id.imageView2) as ImageView
@@ -91,7 +89,7 @@ class TargetAppListFragment : Fragment() {
             itemView.setOnClickListener(this)
         }
 
-        fun bindTargetApplication( app: TargetApplication) {
+        fun bindTargetApplication(app: TargetApplication) {
             application = app
             appName.text = application.appName
             packageName.text = application.packageName
@@ -122,7 +120,7 @@ class TargetAppListFragment : Fragment() {
             p0.bindTargetApplication(targetApplication)
         }
 
-        val targetApps : List<TargetApplication> = apps
+        val targetApps: List<TargetApplication> = apps
 
     }
 

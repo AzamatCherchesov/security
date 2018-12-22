@@ -4,11 +4,11 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import java.lang.ref.WeakReference
 
-class Router (activity : FragmentActivity, container: Int) {
+class Router(activity: FragmentActivity, container: Int) {
     private val weakActivity = WeakReference(activity)
     private val fragmentContainer = container
 
-    fun navigateTo(addToBack : Boolean = true, fragmentFactory: () -> Fragment) {
+    fun navigateTo(addToBack: Boolean = true, fragmentFactory: () -> Fragment) {
         val activity = weakActivity.get()
 
         activity?.run {
@@ -20,7 +20,7 @@ class Router (activity : FragmentActivity, container: Int) {
         }
     }
 
-    fun navigateBack() : Boolean {
+    fun navigateBack(): Boolean {
         val activity = weakActivity.get()
 
         activity?.run {

@@ -10,15 +10,13 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.io.OutputStream
 import java.io.OutputStreamWriter
-import java.net.HttpURLConnection
 import java.net.URL
-import java.net.URLEncoder
 import javax.net.ssl.HttpsURLConnection
 
-class CheckAppFragment  : DialogFragment() {
+class CheckAppFragment : DialogFragment() {
     lateinit var appName: String
 
-    fun setName(appName:String): CheckAppFragment {
+    fun setName(appName: String): CheckAppFragment {
         this.appName = appName
         return this
     }
@@ -29,7 +27,7 @@ class CheckAppFragment  : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return AlertDialog.Builder(activity).setTitle("Отправка приложения на анализ")
                 .setMessage("Отправить приложение \"$appName\" на анализ?")
-                .setPositiveButton("отправить",object : DialogInterface.OnClickListener{
+                .setPositiveButton("отправить", object : DialogInterface.OnClickListener {
                     override fun onClick(p0: DialogInterface?, p1: Int) {
                         //TODO HTTP request
                         //746cdb67b9f9ef1b202e04051b84bbec8756e908a0b6a7b6ed409b7f0a616225

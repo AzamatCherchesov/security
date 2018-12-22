@@ -1,6 +1,5 @@
 package com.a1tt.security
 
-import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -14,7 +13,6 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.widget.SearchView
 import android.view.View
 import com.a1tt.security.AnalysResults.ResultFragment
-
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener  {
 
