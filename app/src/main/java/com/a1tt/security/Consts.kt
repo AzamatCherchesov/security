@@ -20,5 +20,12 @@ class Consts {
 
         const val DETECT_BOOL: String = "detected"
         const val RESULT_STR: String = "result"
+
+        const val GET_ALL_APPS: Int = 1
+
+        const val SUCCESED_WRITE_TO_DB: Int = 2
+        const val GET_SCAN_URL_RESULT: Int = 3
+        const val GOT_SCAN_URL_RESULT: Int = 4
+        const val FAILED_GET_SCAN_URL_RESULT: Int = 5
     }
 }

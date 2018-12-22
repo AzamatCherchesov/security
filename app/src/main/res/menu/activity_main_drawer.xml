@@ -4,21 +4,18 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/app_list"
-            android:title="Installed apps"
-            android:icon="@drawable/baseline_android_black_18dp"
+            android:title="@string/installed_apps"
+            android:icon="@drawable/ic_apps_for_scan"
             />
         <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Results" />
+            android:id="@+id/scan_results"
+            android:icon="@drawable/ic_scan_results"
+            android:title="@string/results" />
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Scan URL" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:id="@+id/scan_url"
+            android:icon="@drawable/ic_scan_url"
+            android:title="@string/scan_url" />
+
     </group>
 
     <item android:title="Communicate">

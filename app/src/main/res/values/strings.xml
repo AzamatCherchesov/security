@@ -9,4 +9,9 @@
     <string name="result_icon">result_icon</string>
     <string name="app_icon">app_icon</string>
     <string name="search">search</string>
+    <string name="installed_apps">Installed apps</string>
+    <string name="results">Results</string>
+    <string name="scan_url">Scan URL</string>
+    <string name="security_application">Security application</string>
+    <string name="developer_cherchesov_azamat">developer - Cherchesov Azamat</string>
 </resources>

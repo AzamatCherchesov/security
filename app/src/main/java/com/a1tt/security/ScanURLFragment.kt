@@ -18,7 +18,9 @@ import com.a1tt.security.Consts.Companion.RESPONCE_CODE_INT
 import com.a1tt.security.Consts.Companion.SCANS_ARR
 import com.a1tt.security.Consts.Companion.SCAN_DATE_STR
 import com.a1tt.security.Consts.Companion.URL_STR
+import com.a1tt.security.MainActivity.Companion.mainHandler
 import com.a1tt.security.MainActivity.Companion.router
+import com.a1tt.security.shedulers.ScanURLSheduler
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -42,16 +44,12 @@ class ScanURLFragment : Fragment() {
         scanURLButton = view.findViewById<View>(R.id.scanButton) as Button
         inputText = view.findViewById<View>(R.id.inputText) as TextView
         scanURLButton?.setOnClickListener {
-            inputText?.clearFocus()
-            scanURLButton?.requestFocus()
-            Thread(Runnable {
-                makePostRequest()
-
-
-                (activity!!.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(activity!!.currentFocus.windowToken, 0)
-                router.navigateBack()
-                //changeFragment(TargetAppListFragment(), "Installed apps")
-            }).start()
+            val firstPair = Pair(APIKEY_STR, "746cdb67b9f9ef1b202e04051b84bbec8756e908a0b6a7b6ed409b7f0a616225")
+            val secondPair = Pair(URL_STR, inputText!!.text.toString())
+            val args: MutableList<Pair<String, String>> = mutableListOf(firstPair, secondPair)
+            Thread(ScanURLSheduler(true, "https://www.virustotal.com/vtapi/v2/url/scan", args, mainHandler)).start()
+            (activity!!.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(activity!!.currentFocus.windowToken, 0)
+            router.navigateBack()
         }
         return view
     }

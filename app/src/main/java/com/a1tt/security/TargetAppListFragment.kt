@@ -10,11 +10,14 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.a1tt.security.AnalysResults.AppAnalysResult
+import com.a1tt.security.Consts.Companion.GET_ALL_APPS
 import com.a1tt.security.R.drawable.ic_app_checked_good
 
 class TargetAppListFragment : Fragment() {
@@ -33,13 +36,10 @@ class TargetAppListFragment : Fragment() {
     val mHandler = object : Handler() {
         override fun handleMessage(msg: Message) {
             when (msg.what) {
-                1 -> {
+                GET_ALL_APPS -> {
                     val apps: List<TargetApplication> = mTargetApplications
                     mAdapter = TargetAppAdapter(apps)
                     targetApplicationRecyclerView.adapter = mAdapter
-                }
-                else -> {
-
                 }
             }
         }
@@ -51,12 +51,9 @@ class TargetAppListFragment : Fragment() {
         targetApplicationRecyclerView = view.findViewById(R.id.target_app_list_recycler_view) as RecyclerView
         targetApplicationRecyclerView.layoutManager = LinearLayoutManager(activity)
 
-
-
         Thread(AppListSheduler(activity as Context, mHandler, null)).start()
         return view
     }
-
 
     inner class TargetAppHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         override fun onClick(p0: View?) {
@@ -66,9 +63,13 @@ class TargetAppListFragment : Fragment() {
             //TODO вынести listener - принять его как аргумент
             if (application.result == null) {
                 CheckAppFragment().setName(application.appName).show(fragmentManager, "")
-                //TODO:: DIALOG
             } else {
-                //TODO::
+                MainActivity.router.navigateTo(fragmentFactory = {
+                    val appAnalysResult = AppAnalysResult()
+                    appAnalysResult.setApplication(application)
+//                    appAnalysResult.mTargetApplication = application
+                    appAnalysResult
+                })
             }
         }
 
@@ -99,7 +100,6 @@ class TargetAppListFragment : Fragment() {
                 resultIcon.setColorFilter(Color.GREEN)
             }
             iconDrawable.setImageDrawable(application.icon)
-            //TODO::
         }
     }
 
