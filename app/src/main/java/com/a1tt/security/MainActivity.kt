@@ -18,6 +18,7 @@ import com.a1tt.security.AnalysResults.ResultFragment
 import com.a1tt.security.Consts.Companion.GET_SCAN_URL_RESULT
 import com.a1tt.security.Consts.Companion.GOT_SCAN_URL_RESULT
 import com.a1tt.security.Consts.Companion.SUCCESED_WRITE_TO_DB
+import com.a1tt.security.DB.DBHelper
 import com.a1tt.security.shedulers.DBSheduler
 import com.a1tt.security.shedulers.ScanURLSheduler
 
@@ -39,6 +40,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val navigationView = findViewById<NavigationView>(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener(this)
 
+        dbHelper = DBHelper(this@MainActivity)
         router = Router(this, R.id.fragment_container)
         if (savedInstanceState == null) router.navigateTo(false, ::TargetAppListFragment)
     }
@@ -122,6 +124,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     companion object {
         lateinit var router: Router
 
+        @SuppressLint("StaticFieldLeak")
+        lateinit var dbHelper: DBHelper
+
         @SuppressLint("HandlerLeak")
         val mainHandler = object : Handler() {
             override fun handleMessage(msg: Message) {
@@ -134,7 +139,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         Thread(ScanURLSheduler(false, "https://www.virustotal.com/vtapi/v2/url/report", args, this)).start()
                     }
                     GOT_SCAN_URL_RESULT -> {
-                        Thread(DBSheduler()).start()
+//                        Thread(DBSheduler()).start()
                     }
                     SUCCESED_WRITE_TO_DB -> {
 
