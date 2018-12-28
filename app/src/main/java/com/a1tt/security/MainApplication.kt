@@ -14,6 +14,11 @@ class MainApplication : Application() {
         lateinit var instance: MainApplication
             private set
         var countDownTimer: CountDownTimer? = null
-        var timerCounter: Long = 8000
+        var timerCounter: Long = 10
+
+//        var mInstalledApplications: MutableList<TargetApplication> = mutableListOf()
+
+        val appDataManager = AppDataManager()
+
     }
 }

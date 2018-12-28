@@ -14,13 +14,16 @@ import android.support.design.widget.NavigationView
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.widget.SearchView
 import android.view.View
+import com.a1tt.security.AnalysResults.Card
 import com.a1tt.security.AnalysResults.ResultFragment
+import com.a1tt.security.AnalysResults.ResultFragment.Companion.cards
 import com.a1tt.security.Consts.Companion.GET_SCAN_URL_RESULT
 import com.a1tt.security.Consts.Companion.GOT_SCAN_URL_RESULT
 import com.a1tt.security.Consts.Companion.SUCCESED_WRITE_TO_DB
 import com.a1tt.security.DB.DBHelper
 import com.a1tt.security.shedulers.DBSheduler
 import com.a1tt.security.shedulers.ScanURLSheduler
+import org.json.JSONObject
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -139,6 +142,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         Thread(ScanURLSheduler(false, "https://www.virustotal.com/vtapi/v2/url/report", args, this)).start()
                     }
                     GOT_SCAN_URL_RESULT -> {
+                        val scanResult : JSONObject = msg.obj as JSONObject
+                        scanResult.getString("resource")
+                        scanResult.getString("scan_date")
+                        cards.add(Card(scanResult.getString("url"), scanResult.getString("scan_date")))
 //                        Thread(DBSheduler()).start()
                     }
                     SUCCESED_WRITE_TO_DB -> {

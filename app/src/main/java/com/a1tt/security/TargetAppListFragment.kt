@@ -1,16 +1,16 @@
 package com.a1tt.security
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.util.ListUpdateCallback
+import android.support.v7.util.SortedList
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,31 +19,37 @@ import android.widget.TextView
 import com.a1tt.security.AnalysResults.AppAnalysResult
 import com.a1tt.security.Consts.Companion.GET_ALL_APPS
 import com.a1tt.security.R.drawable.ic_app_checked_good
+import com.a1tt.security.R.drawable.ic_app_unchecked
 
 class TargetAppListFragment : Fragment() {
     lateinit var targetApplicationRecyclerView: RecyclerView
     lateinit var mAdapter: TargetAppAdapter
 
-    fun filterAppList(p0: String?) {
-        if (p0 != null) {
-            Thread(AppListSheduler(activity as Context, mHandler, p0)).start()
-        } else {
-            Thread(AppListSheduler(activity as Context, mHandler, null)).start()
-        }
+    override fun onDetach() {
+        super.onDetach()
+        mAdapter.unsubscribe()
     }
 
-    @SuppressLint("HandlerLeak")
-    val mHandler = object : Handler() {
-        override fun handleMessage(msg: Message) {
-            when (msg.what) {
-                GET_ALL_APPS -> {
-                    val apps: List<TargetApplication> = mTargetApplications
-                    mAdapter = TargetAppAdapter(apps)
-                    targetApplicationRecyclerView.adapter = mAdapter
-                }
-            }
-        }
+    fun filterAppList(p0: String?) {
+//        if (p0 != null) {
+//            Thread(AppListSheduler(activity as Context, mHandler, p0)).start()
+//        } else {
+//            Thread(AppListSheduler(activity as Context, mHandler, null)).start()
+//        }
     }
+
+//    val mHandler : Handler = @SuppressLint("HandlerLeak")
+//        object : Handler() {
+//            override fun handleMessage(msg: Message) {
+//                when (msg.what) {
+//                    GET_ALL_APPS -> {
+//                        val apps: List<TargetApplication> = MainApplication.appDataManager.getAllInstalledApp()
+//                        mAdapter = TargetAppAdapter()
+//                        targetApplicationRecyclerView.adapter = mAdapter
+//                    }
+//                }
+//            }
+//        }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         (activity as AppCompatActivity).supportActionBar?.title = "Installed apps"
@@ -51,7 +57,9 @@ class TargetAppListFragment : Fragment() {
         targetApplicationRecyclerView = view.findViewById(R.id.target_app_list_recycler_view) as RecyclerView
         targetApplicationRecyclerView.layoutManager = LinearLayoutManager(activity)
 
-        Thread(AppListSheduler(activity as Context, mHandler, null)).start()
+        mAdapter = TargetAppAdapter()
+        targetApplicationRecyclerView.adapter = mAdapter
+        //Thread(AppListSheduler(activity as Context, mHandler, null)).start()
         return view
     }
 
@@ -98,12 +106,16 @@ class TargetAppListFragment : Fragment() {
             if (result.text != null && result.text != "") {
                 resultIcon.setImageResource(ic_app_checked_good)
                 resultIcon.setColorFilter(Color.GREEN)
+            } else {
+                resultIcon.setImageResource(ic_app_unchecked)
+                resultIcon.setColorFilter(Color.BLACK)
             }
             iconDrawable.setImageDrawable(application.icon)
         }
     }
 
-    inner class TargetAppAdapter(apps: List<TargetApplication>) : RecyclerView.Adapter<TargetAppHolder>() {
+    inner class TargetAppAdapter : RecyclerView.Adapter<TargetAppHolder>() {
+
         override fun onCreateViewHolder(p0: ViewGroup, p1: Int): TargetAppHolder {
             val layoutInflater: LayoutInflater = LayoutInflater.from(activity)
             val view: View = layoutInflater.inflate(R.layout.card_appinfo_view, p0, false)
@@ -111,7 +123,7 @@ class TargetAppListFragment : Fragment() {
         }
 
         override fun getItemCount(): Int {
-            return targetApps.size
+            return targetApps.size()
         }
 
         override fun onBindViewHolder(p0: TargetAppHolder, p1: Int) {
@@ -119,12 +131,48 @@ class TargetAppListFragment : Fragment() {
 //            p0.mTextView.text = targetApplication.appName
             p0.bindTargetApplication(targetApplication)
         }
+        var targetApps: SortedList<TargetApplication>
 
-        val targetApps: List<TargetApplication> = apps
+        fun unsubscribe() {
+            MainApplication.appDataManager.unSubscribe(mListUpdateCallback)
+        }
+
+        val mListUpdateCallback : ListUpdateCallback  = object : ListUpdateCallback {
+            override fun onChanged(p0: Int, p1: Int, p2: Any?) {
+                activity?.runOnUiThread {
+                    this@TargetAppAdapter.notifyItemRangeChanged(p0, p1, p2)
+                }
+            }
+
+            override fun onMoved(p0: Int, p1: Int) {
+                activity?.runOnUiThread {
+                    this@TargetAppAdapter.notifyItemMoved(p0, p1)
+                }
+            }
+
+            override fun onInserted(p0: Int, p1: Int) {
+                activity?.runOnUiThread {
+                    this@TargetAppAdapter.notifyItemRangeInserted(p0, p1)
+                }
+            }
+
+            override fun onRemoved(p0: Int, p1: Int) {
+                activity?.runOnUiThread {
+                    this@TargetAppAdapter.notifyItemRangeRemoved(p0, p1)
+                }
+            }
+
+        }
+
+        init {
+            targetApps = MainApplication.appDataManager.getAllInstalledApp()
+            MainApplication.appDataManager.observe(mListUpdateCallback)
+        }
+
 
     }
 
     companion object {
-        var mTargetApplications: MutableList<TargetApplication> = mutableListOf()
+        lateinit var mHandler : Handler
     }
 }

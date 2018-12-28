@@ -27,17 +27,12 @@ class ResultFragment : Fragment() {
                 LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         val adapter = CardsAdapter()
         cardsRecycler!!.adapter = adapter
-        adapter.addCards(createCards())
+        adapter.addCards(cards)
         adapter.notifyDataSetChanged()
         return view
     }
 
-    private fun createCards(): List<Card> {
+    companion object {
         val cards = ArrayList<Card>()
-        for (i in 0..9) {
-            val card = Card("Title $i", "Message $i")
-            cards.add(card)
-        }
-        return cards
     }
 }
