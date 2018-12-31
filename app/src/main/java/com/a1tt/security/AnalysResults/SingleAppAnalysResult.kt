@@ -10,9 +10,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.a1tt.security.R
-import com.a1tt.security.TargetApplication
+import com.a1tt.security.data.TargetApplication
 
-class AppAnalysResult : Fragment() {
+class SingleAppAnalysResult : Fragment() {
 
     lateinit var mTargetApplication: TargetApplication
 

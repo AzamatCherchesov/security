@@ -3,6 +3,7 @@ package com.a1tt.security
 import android.content.Context
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import com.a1tt.security.data.TargetApplication
 
 class AppListSheduler(val context: Context, val filterStr: String?) : Runnable {
 

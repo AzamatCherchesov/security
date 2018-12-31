@@ -14,14 +14,14 @@ import android.support.design.widget.NavigationView
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.widget.SearchView
 import android.view.View
-import com.a1tt.security.AnalysResults.Card
-import com.a1tt.security.AnalysResults.ResultFragment
-import com.a1tt.security.AnalysResults.ResultFragment.Companion.cards
+import com.a1tt.security.data.ScanedURL
+import com.a1tt.security.AnalysResults.URLAnalysResult
+import com.a1tt.security.AnalysResults.URLAnalysResult.Companion.cards
 import com.a1tt.security.Consts.Companion.GET_SCAN_URL_RESULT
 import com.a1tt.security.Consts.Companion.GOT_SCAN_URL_RESULT
 import com.a1tt.security.Consts.Companion.SUCCESED_WRITE_TO_DB
 import com.a1tt.security.DB.DBHelper
-import com.a1tt.security.shedulers.DBSheduler
+import com.a1tt.security.data.ServicesResult
 import com.a1tt.security.shedulers.ScanURLSheduler
 import org.json.JSONObject
 
@@ -110,7 +110,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 router.navigateTo(fragmentFactory = ::TargetAppListFragment)
             }
             R.id.scan_results -> {
-                router.navigateTo(fragmentFactory = ::ResultFragment)
+                router.navigateTo(fragmentFactory = ::URLAnalysResult)
             }
             R.id.scan_url -> {
                 router.navigateTo(fragmentFactory = ::ScanURLFragment)
@@ -145,7 +145,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         val scanResult : JSONObject = msg.obj as JSONObject
                         scanResult.getString("resource")
                         scanResult.getString("scan_date")
-                        cards.add(Card(scanResult.getString("url"), scanResult.getString("scan_date")))
+
+                        val scans = mutableSetOf<Pair<String, ServicesResult>>()
+                        val myScans = scanResult.getJSONObject("scans")
+                        for (elem in myScans.keys()) {
+                            val myElem = myScans.getJSONObject(elem)
+                            val detected = myElem.getString("detected")
+                            val result = myElem.getString("result")
+                            val detail = if (myElem.has("detail"))  myElem.getString("detail") else ""
+                            scans.add(Pair(elem, ServicesResult(detected, result, detail)))
+                        }
+
+                        cards.add(ScanedURL(scanResult.getString("url"), scanResult.getString("scan_date"), scanResult.getString("verbose_msg"),
+                                scanResult.getInt("positives"), scanResult.getInt("total"), scans))
 //                        Thread(DBSheduler()).start()
                     }
                     SUCCESED_WRITE_TO_DB -> {

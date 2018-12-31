@@ -1,4 +1,4 @@
-package com.a1tt.security
+package com.a1tt.security.data
 
 import android.graphics.drawable.Drawable
 import java.io.Serializable

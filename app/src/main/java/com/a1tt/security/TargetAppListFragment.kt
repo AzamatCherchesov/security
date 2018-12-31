@@ -1,26 +1,24 @@
 package com.a1tt.security
 
-import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
-import android.os.Message
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.util.ListUpdateCallback
 import android.support.v7.util.SortedList
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.a1tt.security.AnalysResults.AppAnalysResult
-import com.a1tt.security.Consts.Companion.GET_ALL_APPS
+import com.a1tt.security.AnalysResults.SingleAppAnalysResult
 import com.a1tt.security.R.drawable.ic_app_checked_good
 import com.a1tt.security.R.drawable.ic_app_unchecked
+import com.a1tt.security.data.TargetApplication
 
 class TargetAppListFragment : Fragment() {
     lateinit var targetApplicationRecyclerView: RecyclerView
@@ -56,7 +54,6 @@ class TargetAppListFragment : Fragment() {
         (activity as AppCompatActivity).supportActionBar?.title = "Installed apps"
         (activity as AppCompatActivity).findViewById<View>(R.id.search)?.visibility = VISIBLE
 
-
         val view: View = inflater.inflate(R.layout.target_app_list, container, false)
         targetApplicationRecyclerView = view.findViewById(R.id.target_app_list_recycler_view) as RecyclerView
         targetApplicationRecyclerView.layoutManager = LinearLayoutManager(activity)
@@ -70,6 +67,7 @@ class TargetAppListFragment : Fragment() {
     inner class TargetAppHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         override fun onClick(p0: View?) {
             println("A1tt" + application.appName + " clicked!!!!")
+            Log.e("A1tt", application.appName + " clicked!!!!")
 
             //make all methods private
             //TODO вынести listener - принять его как аргумент
@@ -77,7 +75,7 @@ class TargetAppListFragment : Fragment() {
                 CheckAppFragment().setName(application.appName).show(fragmentManager, "")
             } else {
                 MainActivity.router.navigateTo(fragmentFactory = {
-                    val appAnalysResult = AppAnalysResult()
+                    val appAnalysResult = SingleAppAnalysResult()
                     appAnalysResult.setApplication(application)
 //                    appAnalysResult.mTargetApplication = application
                     appAnalysResult
@@ -174,9 +172,5 @@ class TargetAppListFragment : Fragment() {
         }
 
 
-    }
-
-    companion object {
-        lateinit var mHandler : Handler
     }
 }

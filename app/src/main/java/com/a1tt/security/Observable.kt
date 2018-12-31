@@ -9,7 +9,7 @@ abstract class Observable : ListUpdateCallback {
         mList.add(observer)
     }
 
-    fun unSubscribe(observer:ListUpdateCallback) {
+    fun unSubscribe(observer: ListUpdateCallback) {
         mList.remove(observer)
     }
 

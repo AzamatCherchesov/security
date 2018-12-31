@@ -1,6 +1,7 @@
 package com.a1tt.security
 
 import android.support.v7.util.SortedList
+import com.a1tt.security.data.TargetApplication
 
 class AppDataManager : Observable() {
 
