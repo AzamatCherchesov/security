@@ -35,16 +35,16 @@ class URLDataManager : Observable() {
 
     })
 
-    fun addApp (application: ScanedURL) {
-        mScanedURLs.add(application)
+    fun addURL(scanedURL: ScanedURL) {
+        mScanedURLs.add(scanedURL)
 
     }
 
-    fun removeApp (application: ScanedURL) {
-        mScanedURLs.remove(application)
+    fun removeURL(scanedURL: ScanedURL) {
+        mScanedURLs.remove(scanedURL)
     }
 
-    fun getAllInstalledApp (): SortedList<ScanedURL> {
+    fun getAllScanedURLs(): SortedList<ScanedURL> {
         return mScanedURLs
     }
 

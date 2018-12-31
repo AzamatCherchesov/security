@@ -16,9 +16,8 @@ class MainApplication : Application() {
         var countDownTimer: CountDownTimer? = null
         var timerCounter: Long = 3000
 
-//        var mInstalledApplications: MutableList<TargetApplication> = mutableListOf()
-
         val appDataManager = AppDataManager()
+        val urlDataManager = URLDataManager()
 
     }
 }

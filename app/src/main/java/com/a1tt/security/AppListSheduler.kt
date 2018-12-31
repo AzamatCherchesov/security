@@ -8,7 +8,6 @@ import com.a1tt.security.data.TargetApplication
 class AppListSheduler(val context: Context, val filterStr: String?) : Runnable {
 
     override fun run() {
-//        val targetApplications: MutableList<TargetApplication> = mutableListOf()
         val packageManager: PackageManager = context.packageManager
         val packs: List<PackageInfo> = packageManager.getInstalledPackages(0)
         var i = 0
@@ -32,11 +31,5 @@ class AppListSheduler(val context: Context, val filterStr: String?) : Runnable {
 
             }
         }
-
-
-
-//        mInstalledApplications = targetApplications
-//        MainApplication.mListener.objectCreated()
-//        handler.sendEmptyMessage(1)
     }
 }

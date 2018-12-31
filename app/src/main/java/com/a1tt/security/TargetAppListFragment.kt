@@ -8,7 +8,6 @@ import android.support.v7.util.ListUpdateCallback
 import android.support.v7.util.SortedList
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.VISIBLE
@@ -37,19 +36,6 @@ class TargetAppListFragment : Fragment() {
 //        }
     }
 
-//    val mHandler : Handler = @SuppressLint("HandlerLeak")
-//        object : Handler() {
-//            override fun handleMessage(msg: Message) {
-//                when (msg.what) {
-//                    GET_ALL_APPS -> {
-//                        val apps: List<TargetApplication> = MainApplication.appDataManager.getAllInstalledApp()
-//                        mAdapter = TargetAppAdapter()
-//                        targetApplicationRecyclerView.adapter = mAdapter
-//                    }
-//                }
-//            }
-//        }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         (activity as AppCompatActivity).supportActionBar?.title = "Installed apps"
         (activity as AppCompatActivity).findViewById<View>(R.id.search)?.visibility = VISIBLE
@@ -60,15 +46,11 @@ class TargetAppListFragment : Fragment() {
 
         mAdapter = TargetAppAdapter()
         targetApplicationRecyclerView.adapter = mAdapter
-        //Thread(AppListSheduler(activity as Context, mHandler, null)).start()
         return view
     }
 
     inner class TargetAppHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         override fun onClick(p0: View?) {
-            println("A1tt" + application.appName + " clicked!!!!")
-            Log.e("A1tt", application.appName + " clicked!!!!")
-
             //make all methods private
             //TODO вынести listener - принять его как аргумент
             if (application.result == null) {
@@ -77,7 +59,6 @@ class TargetAppListFragment : Fragment() {
                 MainActivity.router.navigateTo(fragmentFactory = {
                     val appAnalysResult = SingleAppAnalysResult()
                     appAnalysResult.setApplication(application)
-//                    appAnalysResult.mTargetApplication = application
                     appAnalysResult
                 })
             }
@@ -130,16 +111,16 @@ class TargetAppListFragment : Fragment() {
 
         override fun onBindViewHolder(p0: TargetAppHolder, p1: Int) {
             val targetApplication: TargetApplication = targetApps[p1]
-//            p0.mTextView.text = targetApplication.appName
             p0.bindTargetApplication(targetApplication)
         }
+
         var targetApps: SortedList<TargetApplication>
 
         fun unsubscribe() {
             MainApplication.appDataManager.unSubscribe(mListUpdateCallback)
         }
 
-        val mListUpdateCallback : ListUpdateCallback  = object : ListUpdateCallback {
+        val mListUpdateCallback: ListUpdateCallback = object : ListUpdateCallback {
             override fun onChanged(p0: Int, p1: Int, p2: Any?) {
                 activity?.runOnUiThread {
                     this@TargetAppAdapter.notifyItemRangeChanged(p0, p1, p2)
@@ -170,7 +151,5 @@ class TargetAppListFragment : Fragment() {
             targetApps = MainApplication.appDataManager.getAllInstalledApp()
             MainApplication.appDataManager.observe(mListUpdateCallback)
         }
-
-
     }
 }

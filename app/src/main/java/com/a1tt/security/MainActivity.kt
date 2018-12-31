@@ -16,7 +16,6 @@ import android.support.v7.widget.SearchView
 import android.view.View
 import com.a1tt.security.data.ScanedURL
 import com.a1tt.security.AnalysResults.URLAnalysResult
-import com.a1tt.security.AnalysResults.URLAnalysResult.Companion.cards
 import com.a1tt.security.Consts.Companion.GET_SCAN_URL_RESULT
 import com.a1tt.security.Consts.Companion.GOT_SCAN_URL_RESULT
 import com.a1tt.security.Consts.Companion.SUCCESED_WRITE_TO_DB
@@ -142,7 +141,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         Thread(ScanURLSheduler(false, "https://www.virustotal.com/vtapi/v2/url/report", args, this)).start()
                     }
                     GOT_SCAN_URL_RESULT -> {
-                        val scanResult : JSONObject = msg.obj as JSONObject
+                        val scanResult: JSONObject = msg.obj as JSONObject
                         scanResult.getString("resource")
                         scanResult.getString("scan_date")
 
@@ -152,13 +151,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             val myElem = myScans.getJSONObject(elem)
                             val detected = myElem.getString("detected")
                             val result = myElem.getString("result")
-                            val detail = if (myElem.has("detail"))  myElem.getString("detail") else ""
+                            val detail = if (myElem.has("detail")) myElem.getString("detail") else ""
                             scans.add(Pair(elem, ServicesResult(detected, result, detail)))
                         }
-
-                        cards.add(ScanedURL(scanResult.getString("url"), scanResult.getString("scan_date"), scanResult.getString("verbose_msg"),
+                        MainApplication.urlDataManager.addURL(ScanedURL(scanResult.getString("url"), scanResult.getString("scan_date"), scanResult.getString("verbose_msg"),
                                 scanResult.getInt("positives"), scanResult.getInt("total"), scans))
-//                        Thread(DBSheduler()).start()
                     }
                     SUCCESED_WRITE_TO_DB -> {
 

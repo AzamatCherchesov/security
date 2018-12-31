@@ -98,11 +98,6 @@ class ScanURLSheduler(val isPOST: Boolean, val strURL: String, val args: Mutable
                 if (mainObject.getInt(Consts.RESPONCE_CODE_INT) == 1) {
                     handler.sendMessage(handler.obtainMessage(GOT_SCAN_URL_RESULT, mainObject))
                 }
-
-//                val url = mainObject.getString(Consts.URL_STR)
-//                val scandate = mainObject.getString(Consts.SCAN_DATE_STR)
-//                val scans = mainObject.getJSONObject(Consts.SCANS_ARR)
-
             }
             connection.disconnect()
         }
