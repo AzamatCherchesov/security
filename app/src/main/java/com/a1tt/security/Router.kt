@@ -10,7 +10,6 @@ class Router(activity: FragmentActivity, container: Int) {
 
     fun navigateTo(addToBack: Boolean = true, fragmentFactory: () -> Fragment) {
         val activity = weakActivity.get()
-
         activity?.run {
             val fragment = fragmentFactory()
             val transaction = supportFragmentManager.beginTransaction()

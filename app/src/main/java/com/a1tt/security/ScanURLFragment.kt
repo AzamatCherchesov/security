@@ -4,9 +4,12 @@ import android.app.Activity
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.SearchView
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
+import android.view.View.GONE
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -40,6 +43,7 @@ class ScanURLFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
         (activity as AppCompatActivity).supportActionBar?.title = "Scan URL"
+        (activity as AppCompatActivity).findViewById<View>(R.id.search)?.visibility = GONE
         val view = inflater.inflate(R.layout.scan_url_fragment, container, false)
         scanURLButton = view.findViewById<View>(R.id.scanButton) as Button
         inputText = view.findViewById<View>(R.id.inputText) as TextView
