@@ -15,13 +15,16 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.widget.SearchView
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import com.a1tt.security.data.ScanedURL
 import com.a1tt.security.AnalysResults.URLAnalysResult
 import com.a1tt.security.Consts.Companion.GET_SCAN_URL_RESULT
 import com.a1tt.security.Consts.Companion.GOT_SCAN_URL_RESULT
+import com.a1tt.security.Consts.Companion.SUCCESED_READ_FROM_DB
 import com.a1tt.security.Consts.Companion.SUCCESED_WRITE_TO_DB
 import com.a1tt.security.DB.DBHelper
 import com.a1tt.security.data.ServicesResult
+import com.a1tt.security.shedulers.DBWorker
 import com.a1tt.security.shedulers.ScanURLSheduler
 import org.json.JSONObject
 
@@ -155,11 +158,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             val detail = if (myElem.has("detail")) myElem.getString("detail") else ""
                             scans.add(Pair(elem, ServicesResult(detected, result, detail)))
                         }
-                        MainApplication.urlDataManager.addURL(ScanedURL(scanResult.getString("url"), scanResult.getString("scan_date"), scanResult.getString("verbose_msg"),
-                                scanResult.getInt("positives"), scanResult.getInt("total"), scans))
+                        val scanedURL = ScanedURL(scanResult.getString("url"), scanResult.getString("scan_date"), scanResult.getString("verbose_msg"),
+                                scanResult.getInt("positives"), scanResult.getInt("total"), scans)
+                        MainApplication.urlDataManager.addURL(scanedURL)
+
+
+                        MainApplication.dbSheduler.executor.execute(DBWorker("add", this, scanedURL, null))
                     }
                     SUCCESED_WRITE_TO_DB -> {
-
+                        MainApplication.dbSheduler.executor.execute(DBWorker("select", this, null, "ya.ru"))
+                    }
+                    SUCCESED_READ_FROM_DB -> {
+                        Log.e("A1tt", "SUCCESED_READ_FROM_DB")
                     }
                     else -> {
 
@@ -170,6 +180,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     fun test( view: View) {
+        Log.e("A1tt", " " + view.findViewById<TextView>(R.id.card_title).text)
         Log.e("A1tt", "click")
     }
 

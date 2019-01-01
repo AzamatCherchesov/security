@@ -9,8 +9,16 @@ data class DBHelper(val context: Context) : SQLiteOpenHelper(context, "myDB", nu
         // создаем таблицу с полями
         db?.execSQL("create table mytable ("
                 + "id integer primary key autoincrement,"
-                + "name text,"
-                + "email text" + ");")
+                + "url text,"
+                + "scan_date text,"
+                + "verbose_msg text,"
+                + "number_positives number,"
+                + "number_total number" + ");")
+
+//        db?.execSQL("create table mytable ("
+//                + "id integer primary key autoincrement,"
+//                + "url text,"
+//                + "scan_date text" + ");");
     }
 
     override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {

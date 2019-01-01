@@ -2,7 +2,7 @@ package com.a1tt.security
 
 import android.app.Application
 import android.os.CountDownTimer
-import java.util.concurrent.Executor
+import com.a1tt.security.shedulers.DBSheduler
 import java.util.concurrent.Executors
 
 class MainApplication : Application() {
@@ -10,6 +10,7 @@ class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+        dbSheduler = DBSheduler(Executors.newSingleThreadExecutor(), applicationContext)
     }
 
     companion object {
@@ -18,7 +19,7 @@ class MainApplication : Application() {
         var countDownTimer: CountDownTimer? = null
         var timerCounter: Long = 3000
 
-        val executor: Executor = Executors.newSingleThreadExecutor()
+        lateinit var dbSheduler: DBSheduler
         val appDataManager = AppDataManager()
         val urlDataManager = URLDataManager()
 

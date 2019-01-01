@@ -1,15 +1,29 @@
 package com.a1tt.security.shedulers
 
-import android.content.ContentValues
-import android.util.Log
+import android.content.Context
+import android.database.sqlite.SQLiteDatabase
 import com.a1tt.security.DB.DBHelper
 import java.util.concurrent.Executor
-import java.util.concurrent.Executors
 
-class DBSheduler(val dbHelper : DBHelper, val operation: String, val args: MutableList<Pair<String, String>>, val tableName: String) : Runnable {
-    override fun run() {
+//class DBSheduler(val dbHelper : DBHelper, val operation: String, val args: MutableList<Pair<String, String>>, val tableName: String) : Runnable {
+//    override fun run() {
+//
+//    }
 
+class DBSheduler (val executor: Executor, val context: Context) {
+
+
+    init {
+        val dbHelper = DBHelper(context)
+        db = dbHelper.writableDatabase
     }
+
+    companion object {
+        lateinit var db: SQLiteDatabase
+    }
+}
+
+
 
 //    override fun run() {
 //        val cv  = ContentValues()
@@ -50,4 +64,3 @@ class DBSheduler(val dbHelper : DBHelper, val operation: String, val args: Mutab
 //            }
 //        }
 //    }
-}

@@ -26,6 +26,7 @@ class Consts {
         const val SUCCESED_WRITE_TO_DB: Int = 2
         const val GET_SCAN_URL_RESULT: Int = 3
         const val GOT_SCAN_URL_RESULT: Int = 4
+        const val SUCCESED_READ_FROM_DB: Int = 5
         const val FAILED_GET_SCAN_URL_RESULT: Int = 5
     }
 }
