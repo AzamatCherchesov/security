@@ -13,6 +13,7 @@ import android.view.MenuItem
 import android.support.design.widget.NavigationView
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.widget.SearchView
+import android.util.Log
 import android.view.View
 import com.a1tt.security.data.ScanedURL
 import com.a1tt.security.AnalysResults.URLAnalysResult
@@ -166,6 +167,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
         }
+    }
+
+    fun test( view: View) {
+        Log.e("A1tt", "click")
     }
 
 }

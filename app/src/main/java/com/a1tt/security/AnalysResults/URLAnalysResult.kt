@@ -51,6 +51,7 @@ class URLAnalysResult : Fragment() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TargetURLViewHolder {
             val view =
                     LayoutInflater.from(parent.context).inflate(R.layout.card_item_view, parent, false)
+
             return TargetURLViewHolder(view)
         }
 
@@ -100,11 +101,7 @@ class URLAnalysResult : Fragment() {
         }
     }
 
-    inner class TargetURLViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) , View.OnClickListener {
-        override fun onClick(v: View?) {
-            Log.e("A1tt", "clicked now")
-        }
-
+    inner class TargetURLViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var title: TextView = itemView.findViewById<View>(R.id.card_title) as TextView
         var message: TextView = itemView.findViewById<View>(R.id.card_message) as TextView
     }

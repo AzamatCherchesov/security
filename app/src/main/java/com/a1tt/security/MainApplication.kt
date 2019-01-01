@@ -2,6 +2,8 @@ package com.a1tt.security
 
 import android.app.Application
 import android.os.CountDownTimer
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
 
 class MainApplication : Application() {
 
@@ -16,6 +18,7 @@ class MainApplication : Application() {
         var countDownTimer: CountDownTimer? = null
         var timerCounter: Long = 3000
 
+        val executor: Executor = Executors.newSingleThreadExecutor()
         val appDataManager = AppDataManager()
         val urlDataManager = URLDataManager()
 

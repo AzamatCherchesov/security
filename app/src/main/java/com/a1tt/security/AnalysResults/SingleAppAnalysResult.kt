@@ -28,7 +28,7 @@ class SingleAppAnalysResult : Fragment() {
         (activity as AppCompatActivity).supportActionBar?.title = "Analyses result"
         (activity as AppCompatActivity).findViewById<View>(R.id.search)?.visibility = GONE
 
-        val view = inflater.inflate(R.layout.app_analys_result, container, false)
+        val view = inflater.inflate(R.layout.single_app_analys_result, container, false)
         val imageView = view.findViewById<ImageView>(R.id.analysedAppIcon)
         imageView.setImageDrawable(mTargetApplication.icon)
         val appName = view.findViewById<TextView>(R.id.analysedAppName)
