@@ -16,8 +16,8 @@ import android.support.v7.widget.SearchView
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import com.a1tt.security.AnalysResults.*
 import com.a1tt.security.data.ScanedURL
-import com.a1tt.security.AnalysResults.URLAnalysResult
 import com.a1tt.security.Consts.Companion.GET_SCAN_URL_RESULT
 import com.a1tt.security.Consts.Companion.GOT_SCAN_URL_RESULT
 import com.a1tt.security.Consts.Companion.SUCCESED_READ_FROM_DB
@@ -48,6 +48,60 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         dbHelper = DBHelper(this@MainActivity)
         router = Router(this, R.id.fragment_container)
+
+        mainHandler = @SuppressLint("HandlerLeak")
+        object : Handler() {
+            override fun handleMessage(msg: Message) {
+                when (msg.what) {
+                    GET_SCAN_URL_RESULT -> {
+                        val firstPair = Pair(Consts.APIKEY_STR, "746cdb67b9f9ef1b202e04051b84bbec8756e908a0b6a7b6ed409b7f0a616225")
+                        val secondPair = Pair(Consts.RESOURCE_STR, (msg.obj as String))
+                        val thirdPair = Pair(Consts.ALLINFO_BOOL, "true")
+                        val args: MutableList<Pair<String, String>> = mutableListOf(firstPair, secondPair, thirdPair)
+                        Thread(ScanURLSheduler(false, "https://www.virustotal.com/vtapi/v2/url/report", args, this)).start()
+                    }
+                    GOT_SCAN_URL_RESULT -> {
+                        val scanResult: JSONObject = msg.obj as JSONObject
+                        scanResult.getString("resource")
+                        scanResult.getString("scan_date")
+
+                        val scans = mutableSetOf<Pair<String, ServicesResult>>()
+                        val myScans = scanResult.getJSONObject("scans")
+                        for (elem in myScans.keys()) {
+                            val myElem = myScans.getJSONObject(elem)
+                            val detected = myElem.getString("detected")
+                            val result = myElem.getString("result")
+                            val detail = if (myElem.has("detail")) myElem.getString("detail") else ""
+                            scans.add(Pair(elem, ServicesResult(detected, result, detail)))
+                        }
+                        val scanedURL = ScanedURL(scanResult.getString("url"), scanResult.getString("scan_date"), scanResult.getString("verbose_msg"),
+                                scanResult.getInt("positives"), scanResult.getInt("total"), scans)
+                        MainApplication.urlDataManager.addURL(scanedURL)
+                        MainApplication.dbSheduler.executor.execute(DBWorker("add", this, scanedURL, null))
+                    }
+                    SUCCESED_WRITE_TO_DB -> {
+
+                    }
+                    SUCCESED_READ_FROM_DB -> {
+
+//                        val existingFragment = supportFragmentManager?.findFragmentById(R.id.fragment_container)
+//                        when (existingFragment) {
+//                            is SingleURLResult -> {
+//                                if (existingFragment.isVisible) {
+//                                    MainApplication.singleURLResultController.liveData.postValue("new value")
+//                                }
+//                            }
+//                        }
+                        MainApplication.singleURLResultController.liveData.postValue((msg.obj as ScanedURL))
+                        Log.e("A1tt", "SUCCESED_READ_FROM_DB")
+                    }
+                    else -> {
+
+                    }
+                }
+            }
+        }
+
         if (savedInstanceState == null) router.navigateTo(false, ::TargetAppListFragment)
     }
 
@@ -133,53 +187,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         @SuppressLint("StaticFieldLeak")
         lateinit var dbHelper: DBHelper
 
-        @SuppressLint("HandlerLeak")
-        val mainHandler = object : Handler() {
-            override fun handleMessage(msg: Message) {
-                when (msg.what) {
-                    GET_SCAN_URL_RESULT -> {
-                        val firstPair = Pair(Consts.APIKEY_STR, "746cdb67b9f9ef1b202e04051b84bbec8756e908a0b6a7b6ed409b7f0a616225")
-                        val secondPair = Pair(Consts.RESOURCE_STR, (msg.obj as String))
-                        val thirdPair = Pair(Consts.ALLINFO_BOOL, "true")
-                        val args: MutableList<Pair<String, String>> = mutableListOf(firstPair, secondPair, thirdPair)
-                        Thread(ScanURLSheduler(false, "https://www.virustotal.com/vtapi/v2/url/report", args, this)).start()
-                    }
-                    GOT_SCAN_URL_RESULT -> {
-                        val scanResult: JSONObject = msg.obj as JSONObject
-                        scanResult.getString("resource")
-                        scanResult.getString("scan_date")
-
-                        val scans = mutableSetOf<Pair<String, ServicesResult>>()
-                        val myScans = scanResult.getJSONObject("scans")
-                        for (elem in myScans.keys()) {
-                            val myElem = myScans.getJSONObject(elem)
-                            val detected = myElem.getString("detected")
-                            val result = myElem.getString("result")
-                            val detail = if (myElem.has("detail")) myElem.getString("detail") else ""
-                            scans.add(Pair(elem, ServicesResult(detected, result, detail)))
-                        }
-                        val scanedURL = ScanedURL(scanResult.getString("url"), scanResult.getString("scan_date"), scanResult.getString("verbose_msg"),
-                                scanResult.getInt("positives"), scanResult.getInt("total"), scans)
-                        MainApplication.urlDataManager.addURL(scanedURL)
-
-
-                        MainApplication.dbSheduler.executor.execute(DBWorker("add", this, scanedURL, null))
-                    }
-                    SUCCESED_WRITE_TO_DB -> {
-                        MainApplication.dbSheduler.executor.execute(DBWorker("select", this, null, "ya.ru"))
-                    }
-                    SUCCESED_READ_FROM_DB -> {
-                        Log.e("A1tt", "SUCCESED_READ_FROM_DB")
-                    }
-                    else -> {
-
-                    }
-                }
-            }
-        }
+        lateinit var mainHandler: Handler
     }
 
     fun test( view: View) {
+
+        router.navigateTo(fragmentFactory =  {
+            val singleURLResult = SingleURLResult()
+            val bundle = Bundle()
+            bundle.putString("url", view.findViewById<TextView>(R.id.card_title).text as String)
+            singleURLResult.arguments = bundle
+            singleURLResult
+        })
         Log.e("A1tt", " " + view.findViewById<TextView>(R.id.card_title).text)
         Log.e("A1tt", "click")
     }

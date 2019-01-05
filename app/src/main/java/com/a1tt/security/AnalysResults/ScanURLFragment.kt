@@ -1,13 +1,11 @@
-package com.a1tt.security
+package com.a1tt.security.AnalysResults
 
 import android.app.Activity
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.SearchView
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.View
 import android.view.View.GONE
 import android.view.ViewGroup
@@ -23,6 +21,7 @@ import com.a1tt.security.Consts.Companion.SCAN_DATE_STR
 import com.a1tt.security.Consts.Companion.URL_STR
 import com.a1tt.security.MainActivity.Companion.mainHandler
 import com.a1tt.security.MainActivity.Companion.router
+import com.a1tt.security.R
 import com.a1tt.security.shedulers.ScanURLSheduler
 import org.json.JSONObject
 import java.io.BufferedReader

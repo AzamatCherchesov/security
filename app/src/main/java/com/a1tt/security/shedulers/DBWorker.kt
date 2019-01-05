@@ -6,6 +6,7 @@ import android.content.ContentValues
 import com.a1tt.security.Consts
 import com.a1tt.security.data.ScanedURL
 import com.a1tt.security.data.ServicesResult
+import java.lang.Thread.sleep
 
 
 class DBWorker(val command: String, val handler: Handler?, val scanedURL: ScanedURL?, val selectionString : String?): Runnable {
@@ -64,7 +65,7 @@ class DBWorker(val command: String, val handler: Handler?, val scanedURL: Scaned
                 c.close()
             }
             "select" -> {
-                val c = DBSheduler.db.rawQuery("SELECT * FROM mytable WHERE number_positives = " + 0, null)
+                val c = DBSheduler.db.rawQuery("SELECT * FROM mytable WHERE url = \"" + selectionString + "\"", null)
                 if (c.moveToFirst())
                 {
                     val idColIndex = c.getColumnIndex("id")
@@ -85,6 +86,7 @@ class DBWorker(val command: String, val handler: Handler?, val scanedURL: Scaned
                         handler?.sendMessage(handler?.obtainMessage(Consts.SUCCESED_READ_FROM_DB, scanedURL))
                     }
                     while (c.moveToNext())
+                    sleep(10000)
                 }
                 c.close()
             }

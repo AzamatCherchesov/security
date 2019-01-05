@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/urlViewTitle"
+            style="@style/Base.TextAppearance.AppCompat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Scaned URL:"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/urlView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/urlViewTitle"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/scanDateViewTitle"
+            style="@style/Base.TextAppearance.AppCompat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/urlView"
+            android:text="Last scaned at:"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/scanDateView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/scanDateViewTitle"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/verboseMsgTitle"
+            style="@style/Base.TextAppearance.AppCompat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/scanDateView"
+            android:text="Verbose message:"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/verboseMsg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/verboseMsgTitle"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/detected"
+            style="@style/Base.TextAppearance.AppCompat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/verboseMsg"
+            android:text="Detected:"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/number1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/detected"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/clear_site"
+            style="@style/Base.TextAppearance.AppCompat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/number1"
+            android:text="Clear site:"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/number2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/clear_site"
+            android:textSize="18sp" />
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/delimeter_view"
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:background="@android:color/background_dark" />
+</LinearLayout>

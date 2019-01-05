@@ -2,6 +2,7 @@ package com.a1tt.security
 
 import android.app.Application
 import android.os.CountDownTimer
+import com.a1tt.security.data.SingleURLResultController
 import com.a1tt.security.shedulers.DBSheduler
 import java.util.concurrent.Executors
 
@@ -22,6 +23,7 @@ class MainApplication : Application() {
         lateinit var dbSheduler: DBSheduler
         val appDataManager = AppDataManager()
         val urlDataManager = URLDataManager()
+        val singleURLResultController = SingleURLResultController()
 
     }
 }

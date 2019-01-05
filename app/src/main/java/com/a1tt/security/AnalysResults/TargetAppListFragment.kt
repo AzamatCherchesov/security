@@ -1,4 +1,4 @@
-package com.a1tt.security
+package com.a1tt.security.AnalysResults
 
 import android.graphics.Color
 import android.os.Bundle
@@ -14,7 +14,9 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.a1tt.security.AnalysResults.SingleAppAnalysResult
+import com.a1tt.security.MainActivity
+import com.a1tt.security.MainApplication
+import com.a1tt.security.R
 import com.a1tt.security.R.drawable.ic_app_checked_good
 import com.a1tt.security.R.drawable.ic_app_unchecked
 import com.a1tt.security.data.TargetApplication
