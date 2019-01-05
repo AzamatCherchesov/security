@@ -17,6 +17,7 @@ import android.util.Log
 import android.view.View
 import android.widget.TextView
 import com.a1tt.security.AnalysResults.*
+import com.a1tt.security.AnalysResults.SingleURLResult.Companion.addResultsServices
 import com.a1tt.security.data.ScanedURL
 import com.a1tt.security.Consts.Companion.GET_SCAN_URL_RESULT
 import com.a1tt.security.Consts.Companion.GOT_SCAN_URL_RESULT
@@ -92,6 +93,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //                                }
 //                            }
 //                        }
+
+                        addResultsServices((msg.obj as ScanedURL).scans)
                         MainApplication.singleURLResultController.liveData.postValue((msg.obj as ScanedURL))
                     }
                     else -> {

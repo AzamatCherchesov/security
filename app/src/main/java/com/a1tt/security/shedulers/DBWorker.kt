@@ -4,6 +4,7 @@ import android.os.Handler
 import android.util.Log
 import android.content.ContentValues
 import android.content.Context
+import com.a1tt.security.AnalysResults.SingleURLResult
 import com.a1tt.security.Consts
 import com.a1tt.security.data.ScanedURL
 import com.a1tt.security.data.ServicesResult
