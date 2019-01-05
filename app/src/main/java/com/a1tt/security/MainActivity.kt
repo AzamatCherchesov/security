@@ -65,19 +65,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         scanResult.getString("resource")
                         scanResult.getString("scan_date")
 
-                        val scans = mutableSetOf<Pair<String, ServicesResult>>()
+                        val scans = mutableListOf<ServicesResult>()
                         val myScans = scanResult.getJSONObject("scans")
                         for (elem in myScans.keys()) {
                             val myElem = myScans.getJSONObject(elem)
-                            val detected = myElem.getString("detected")
+                            val detected = myElem.getBoolean("detected")
                             val result = myElem.getString("result")
                             val detail = if (myElem.has("detail")) myElem.getString("detail") else ""
-                            scans.add(Pair(elem, ServicesResult(detected, result, detail)))
+                            scans.add(ServicesResult(elem, detected, result, detail))
                         }
                         val scanedURL = ScanedURL(scanResult.getString("url"), scanResult.getString("scan_date"), scanResult.getString("verbose_msg"),
                                 scanResult.getInt("positives"), scanResult.getInt("total"), scans)
                         MainApplication.urlDataManager.addURL(scanedURL)
-                        MainApplication.dbSheduler.executor.execute(DBWorker("add", this, scanedURL, null))
+                        MainApplication.dbSheduler.executor.execute(DBWorker(applicationContext, "add", this, scanedURL, null))
                     }
                     SUCCESED_WRITE_TO_DB -> {
 
@@ -93,7 +93,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //                            }
 //                        }
                         MainApplication.singleURLResultController.liveData.postValue((msg.obj as ScanedURL))
-                        Log.e("A1tt", "SUCCESED_READ_FROM_DB")
                     }
                     else -> {
 

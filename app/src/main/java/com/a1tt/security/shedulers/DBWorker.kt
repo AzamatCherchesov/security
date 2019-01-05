@@ -3,13 +3,14 @@ package com.a1tt.security.shedulers
 import android.os.Handler
 import android.util.Log
 import android.content.ContentValues
+import android.content.Context
 import com.a1tt.security.Consts
 import com.a1tt.security.data.ScanedURL
 import com.a1tt.security.data.ServicesResult
 import java.lang.Thread.sleep
 
 
-class DBWorker(val command: String, val handler: Handler?, val scanedURL: ScanedURL?, val selectionString : String?): Runnable {
+class DBWorker(val context: Context, val command: String, val handler: Handler?, val scanedURL: ScanedURL?, val selectionString : String?): Runnable {
     override fun run() {
         Log.e("A1tt", "DBWorker " + command)
         Thread.sleep(1000)
@@ -25,6 +26,17 @@ class DBWorker(val command: String, val handler: Handler?, val scanedURL: Scaned
                 cv.put("number_total", scanedURL?.numberTotal)
                 // вставляем запись и получаем ее ID
                 val rowID = DBSheduler.db.insert("mytable", null, cv)
+
+                for (elem in scanedURL?.scans!!) {
+                    val addCV = ContentValues()
+                    addCV.put("url", scanedURL?.scanedURL)
+                    addCV.put("service", elem.serviceName)
+                    addCV.put("detected", elem.detected.toString())
+                    addCV.put("result", elem.result)
+                    addCV.put("detail", elem.detail)
+                    DBSheduler.db.insert("additional", null, addCV)
+                }
+
                 handler?.sendMessage(handler?.obtainMessage(Consts.SUCCESED_WRITE_TO_DB, rowID))
 
             }
@@ -47,7 +59,7 @@ class DBWorker(val command: String, val handler: Handler?, val scanedURL: Scaned
                     val numberPositivesColIndex = c.getColumnIndex("number_positives")
                     val numberTotalColIndex = c.getColumnIndex("number_total")
 
-                    val scans = mutableSetOf<Pair<String, ServicesResult>>()
+                    val scans = mutableListOf<ServicesResult>()
 
                     do
                     {
@@ -75,7 +87,24 @@ class DBWorker(val command: String, val handler: Handler?, val scanedURL: Scaned
                     val numberPositivesColIndex = c.getColumnIndex("number_positives")
                     val numberTotalColIndex = c.getColumnIndex("number_total")
 
-                    val scans = mutableSetOf<Pair<String, ServicesResult>>()
+                    val scans = mutableListOf<ServicesResult>()
+
+                    val addC = DBSheduler.db.rawQuery("SELECT * FROM additional WHERE url = \"" + selectionString + "\"", null)
+                    if (addC.moveToFirst())
+                    {
+                        val addIdColIndex = addC.getColumnIndex("id")
+                        val addUrlColIndex = addC.getColumnIndex("url")
+                        val addServiceColIndex = addC.getColumnIndex("service")
+                        val addDetectedColIndex = addC.getColumnIndex("detected")
+                        val addResultColIndex = addC.getColumnIndex("result")
+                        val addDetailColIndex = addC.getColumnIndex("detail")
+                        do
+                        {
+                            scans.add(ServicesResult(addC.getString(addServiceColIndex), addC.getString(addDetectedColIndex).toBoolean(),
+                                    addC.getString(addResultColIndex) ,addC.getString(addDetailColIndex)))
+                        } while(addC.moveToNext())
+                    }
+                    addC.close()
 
                     do
                     {

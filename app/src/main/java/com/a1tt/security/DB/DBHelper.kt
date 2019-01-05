@@ -15,6 +15,14 @@ data class DBHelper(val context: Context) : SQLiteOpenHelper(context, "myDB", nu
                 + "number_positives number,"
                 + "number_total number" + ");")
 
+        db?.execSQL("create table additional ("
+                + "id integer primary key autoincrement,"
+                + "url text,"
+                + "service text,"
+                + "detected text,"
+                + "result text,"
+                + "detail text" + ");")
+
 //        db?.execSQL("create table mytable ("
 //                + "id integer primary key autoincrement,"
 //                + "url text,"

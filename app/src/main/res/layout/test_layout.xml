@@ -78,7 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/number1"
-            android:text="Clear site:"
+            android:text="Total:"
             android:textSize="18sp" />
 
         <TextView
@@ -95,4 +95,10 @@
         android:layout_width="match_parent"
         android:layout_height="6dp"
         android:background="@android:color/background_dark" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/scans_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
 </LinearLayout>
