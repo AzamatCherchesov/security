@@ -4,12 +4,18 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
+import com.a1tt.security.Consts
+import com.a1tt.security.MainActivity
+import com.a1tt.security.shedulers.ScanFileSheduler
+import com.a1tt.security.shedulers.ScanURLSheduler
 
 class CheckAppFragment : DialogFragment() {
     lateinit var appName: String
+    lateinit var apkFilePath: String
 
-    fun setName(appName: String): CheckAppFragment {
+    fun setName(appName: String, apkFilePath: String): CheckAppFragment {
         this.appName = appName
+        this.apkFilePath = apkFilePath
         return this
     }
 
@@ -20,6 +26,16 @@ class CheckAppFragment : DialogFragment() {
         return AlertDialog.Builder(activity).setTitle("Отправка приложения на анализ")
                 .setMessage("Отправить приложение \"$appName\" на анализ?")
                 .setPositiveButton("отправить") { p0, p1 ->
+                    val firstPair = Pair(Consts.APIKEY_STR, "746cdb67b9f9ef1b202e04051b84bbec8756e908a0b6a7b6ed409b7f0a616225")
+//                    val secondPair = Pair(Consts.URL_STR, inputText!!.text.toString())
+                    val args: MutableList<Pair<String, String>> = mutableListOf(firstPair)
+
+                    Thread(ScanFileSheduler(true, "https://www.virustotal.com/vtapi/v2/file/scan", args, MainActivity.mainHandler, apkFilePath, appName)).start()
+
+
+
+
+
 //                    Thread(Runnable {
 //                        // Set up request
 //                        val connection: HttpsURLConnection = URL("https://www.virustotal.com/vtapi/v2/url/scan").openConnection() as HttpsURLConnection

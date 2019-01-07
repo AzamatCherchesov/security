@@ -15,8 +15,8 @@ import com.a1tt.security.MainApplication
 import com.a1tt.security.MainApplication.Companion.singleURLResultController
 import com.a1tt.security.R
 import com.a1tt.security.data.ScanedURL
-import com.a1tt.security.data.ServicesResult
-import com.a1tt.security.shedulers.DBWorker
+import com.a1tt.security.data.URLScanServicesResult
+import com.a1tt.security.shedulers.DBURLWorker
 
 class SingleURLResult : Fragment() {
 
@@ -33,7 +33,7 @@ class SingleURLResult : Fragment() {
         (activity as AppCompatActivity).findViewById<View>(R.id.search)?.visibility = View.GONE
 
         val url = arguments?.getString("url", null)
-        MainApplication.dbSheduler.executor.execute(DBWorker(activity!!.applicationContext, "select", mainHandler, null, url))
+        MainApplication.dbSheduler.executor.execute(DBURLWorker(activity!!.applicationContext, "select", mainHandler, null, url))
 
         myview = inflater.inflate(R.layout.test_layout, container, false)
 
@@ -88,12 +88,12 @@ class SingleURLResult : Fragment() {
     }
 
     companion object {
-        fun addResultsServices(items: MutableList<ServicesResult>) {
+        fun addResultsServices(items: MutableList<URLScanServicesResult>) {
             scanServicesList = items
             mAdapter.notifyDataSetChanged()
         }
         lateinit var mAdapter: TargetURLAdapter
-        var scanServicesList: MutableList<ServicesResult> = mutableListOf<ServicesResult>()
+        var scanServicesList: MutableList<URLScanServicesResult> = mutableListOf<URLScanServicesResult>()
     }
 
 }

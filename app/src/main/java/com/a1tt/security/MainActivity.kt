@@ -18,14 +18,21 @@ import android.view.View
 import android.widget.TextView
 import com.a1tt.security.AnalysResults.*
 import com.a1tt.security.AnalysResults.SingleURLResult.Companion.addResultsServices
+import com.a1tt.security.Consts.Companion.GET_SCAN_FILE_RESULT
 import com.a1tt.security.data.ScanedURL
 import com.a1tt.security.Consts.Companion.GET_SCAN_URL_RESULT
+import com.a1tt.security.Consts.Companion.GOT_SCAN_FILE_RESULT
 import com.a1tt.security.Consts.Companion.GOT_SCAN_URL_RESULT
-import com.a1tt.security.Consts.Companion.SUCCESED_READ_FROM_DB
-import com.a1tt.security.Consts.Companion.SUCCESED_WRITE_TO_DB
+import com.a1tt.security.Consts.Companion.SUCCESED_READ_URL_FROM_DB
+import com.a1tt.security.Consts.Companion.SUCCESED_WRITE_FILE_TO_DB
+import com.a1tt.security.Consts.Companion.SUCCESED_WRITE_URL_TO_DB
 import com.a1tt.security.DB.DBHelper
-import com.a1tt.security.data.ServicesResult
-import com.a1tt.security.shedulers.DBWorker
+import com.a1tt.security.data.FileScanServicesResult
+import com.a1tt.security.data.ScanedFile
+import com.a1tt.security.data.URLScanServicesResult
+import com.a1tt.security.shedulers.DBFileWorker
+import com.a1tt.security.shedulers.DBURLWorker
+import com.a1tt.security.shedulers.ScanFileSheduler
 import com.a1tt.security.shedulers.ScanURLSheduler
 import org.json.JSONObject
 
@@ -61,29 +68,54 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         val args: MutableList<Pair<String, String>> = mutableListOf(firstPair, secondPair, thirdPair)
                         Thread(ScanURLSheduler(false, "https://www.virustotal.com/vtapi/v2/url/report", args, this)).start()
                     }
+                    GET_SCAN_FILE_RESULT ->{
+                        val firstPair = Pair(Consts.APIKEY_STR, "746cdb67b9f9ef1b202e04051b84bbec8756e908a0b6a7b6ed409b7f0a616225")
+                        val secondPair = Pair(Consts.RESOURCE_STR, (msg.obj as JSONObject).getString("scan_id"))
+                        val thirdPair = Pair(Consts.ALLINFO_BOOL, "true")
+                        val args: MutableList<Pair<String, String>> = mutableListOf(firstPair, secondPair, thirdPair)
+                        Thread(ScanFileSheduler(false, "https://www.virustotal.com/vtapi/v2/file/report", args, this, "",
+                                (msg.obj as JSONObject).getString("app_name"))).start()
+                    }
                     GOT_SCAN_URL_RESULT -> {
                         val scanResult: JSONObject = msg.obj as JSONObject
-                        scanResult.getString("resource")
-                        scanResult.getString("scan_date")
 
-                        val scans = mutableListOf<ServicesResult>()
+                        val scans = mutableListOf<URLScanServicesResult>()
                         val myScans = scanResult.getJSONObject("scans")
                         for (elem in myScans.keys()) {
                             val myElem = myScans.getJSONObject(elem)
                             val detected = myElem.getBoolean("detected")
                             val result = myElem.getString("result")
                             val detail = if (myElem.has("detail")) myElem.getString("detail") else ""
-                            scans.add(ServicesResult(elem, detected, result, detail))
+                            scans.add(URLScanServicesResult(elem, detected, result, detail))
                         }
                         val scanedURL = ScanedURL(scanResult.getString("url"), scanResult.getString("scan_date"), scanResult.getString("verbose_msg"),
                                 scanResult.getInt("positives"), scanResult.getInt("total"), scans)
                         MainApplication.urlDataManager.addURL(scanedURL)
-                        MainApplication.dbSheduler.executor.execute(DBWorker(applicationContext, "add", this, scanedURL, null))
+                        MainApplication.dbSheduler.executor.execute(DBURLWorker(applicationContext, "add", this, scanedURL, null))
                     }
-                    SUCCESED_WRITE_TO_DB -> {
+                    GOT_SCAN_FILE_RESULT -> {
+                        val scanResult: JSONObject = msg.obj as JSONObject
+                        val scans = mutableListOf<FileScanServicesResult>()
+                        val myScans = scanResult.getJSONObject("scans")
+                        for (elem in myScans.keys()) {
+                            val myElem = myScans.getJSONObject(elem)
+                            val detected = myElem.getBoolean("detected")
+                            val version = myElem.getString("version")
+                            val result = myElem.getString("result")
+                            val update = myElem.getString("update")
+                            scans.add(FileScanServicesResult(elem, detected, version, result, update))
+                        }
+                        val scanedFile = ScanedFile(scanResult.getString("app_name"), scanResult.getString("scan_date"), scanResult.getString("verbose_msg"),
+                                scanResult.getInt("positives"), scanResult.getInt("total"), scans)
+                        MainApplication.dbSheduler.executor.execute(DBFileWorker(applicationContext, "add", this, scanedFile, null))
+                    }
+                    SUCCESED_WRITE_URL_TO_DB -> {
 
                     }
-                    SUCCESED_READ_FROM_DB -> {
+                    SUCCESED_WRITE_FILE_TO_DB -> {
+                        MainApplication.dbSheduler.executor.execute(DBFileWorker(applicationContext, "select", this, null, (msg.obj as ScanedFile).scanedFile))
+                    }
+                    SUCCESED_READ_URL_FROM_DB -> {
 
 //                        val existingFragment = supportFragmentManager?.findFragmentById(R.id.fragment_container)
 //                        when (existingFragment) {

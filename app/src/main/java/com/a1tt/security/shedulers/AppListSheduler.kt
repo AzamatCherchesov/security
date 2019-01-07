@@ -18,15 +18,18 @@ class AppListSheduler(val context: Context, val filterStr: String?) : Runnable {
                 if ((pack.applicationInfo.loadLabel(packageManager) as String).contains(filterStr) ||
                         pack.packageName.contains(filterStr)) {
                     val targetApplication = TargetApplication(appName = pack.applicationInfo.loadLabel(packageManager) as String,
-                            packageName = pack.packageName, icon = pack.applicationInfo.loadIcon(packageManager), result = if (i % 2 == 0) "some info " else null)
+                            packageName = pack.packageName, icon = pack.applicationInfo.loadIcon(packageManager), result = if (i % 2 == 0) "some info " else null,
+                            apkFilePath = pack.applicationInfo.publicSourceDir)
                     MainApplication.appDataManager.addApp(targetApplication)
                     i++
                 }
             }
         } else {
             for (pack in packs) {
+
                 val targetApplication = TargetApplication(appName = pack.applicationInfo.loadLabel(packageManager) as String,
-                        packageName = pack.packageName, icon = pack.applicationInfo.loadIcon(packageManager), result = if (i % 2 == 0) "some info " else null)
+                        packageName = pack.packageName, icon = pack.applicationInfo.loadIcon(packageManager), result = if (i % 2 == 0) "some info " else null,
+                        apkFilePath = pack.applicationInfo.publicSourceDir)
                 MainApplication.appDataManager.addApp(targetApplication)
                 i++
 

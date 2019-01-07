@@ -56,7 +56,7 @@ class TargetAppListFragment : Fragment() {
             //make all methods private
             //TODO вынести listener - принять его как аргумент
             if (application.result == null) {
-                CheckAppFragment().setName(application.appName).show(fragmentManager, "")
+                CheckAppFragment().setName(application.appName, application.apkFilePath).show(fragmentManager, "")
             } else {
                 MainActivity.router.navigateTo(fragmentFactory = {
                     val appAnalysResult = SingleAppAnalysResult()

@@ -23,6 +23,23 @@ data class DBHelper(val context: Context) : SQLiteOpenHelper(context, "myDB", nu
                 + "result text,"
                 + "detail text" + ");")
 
+        db?.execSQL("create table files ("
+                + "id integer primary key autoincrement,"
+                + "scaned_file text,"
+                + "scan_date text,"
+                + "verbose_msg text,"
+                + "number_positives number,"
+                + "number_total number" + ");")
+
+        db?.execSQL("create table filesAdd ("
+                + "id integer primary key autoincrement,"
+                + "scaned_file text,"
+                + "service text,"
+                + "detected text,"
+                + "result text,"
+                + "version text,"
+                + "update_field text" + ");")
+
 //        db?.execSQL("create table mytable ("
 //                + "id integer primary key autoincrement,"
 //                + "url text,"

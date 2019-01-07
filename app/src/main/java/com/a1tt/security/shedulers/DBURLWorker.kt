@@ -4,14 +4,13 @@ import android.os.Handler
 import android.util.Log
 import android.content.ContentValues
 import android.content.Context
-import com.a1tt.security.AnalysResults.SingleURLResult
 import com.a1tt.security.Consts
 import com.a1tt.security.data.ScanedURL
-import com.a1tt.security.data.ServicesResult
+import com.a1tt.security.data.URLScanServicesResult
 import java.lang.Thread.sleep
 
 
-class DBWorker(val context: Context, val command: String, val handler: Handler?, val scanedURL: ScanedURL?, val selectionString : String?): Runnable {
+class DBURLWorker(val context: Context, val command: String, val handler: Handler?, val scanedURL: ScanedURL?, val selectionString : String?): Runnable {
     override fun run() {
         Log.e("A1tt", "DBWorker " + command)
         Thread.sleep(1000)
@@ -38,7 +37,7 @@ class DBWorker(val context: Context, val command: String, val handler: Handler?,
                     DBSheduler.db.insert("additional", null, addCV)
                 }
 
-                handler?.sendMessage(handler?.obtainMessage(Consts.SUCCESED_WRITE_TO_DB, rowID))
+                handler?.sendMessage(handler?.obtainMessage(Consts.SUCCESED_WRITE_URL_TO_DB, rowID))
 
             }
             "read" -> {
@@ -60,7 +59,7 @@ class DBWorker(val context: Context, val command: String, val handler: Handler?,
                     val numberPositivesColIndex = c.getColumnIndex("number_positives")
                     val numberTotalColIndex = c.getColumnIndex("number_total")
 
-                    val scans = mutableListOf<ServicesResult>()
+                    val scans = mutableListOf<URLScanServicesResult>()
 
                     do
                     {
@@ -68,7 +67,7 @@ class DBWorker(val context: Context, val command: String, val handler: Handler?,
                                 c.getInt(numberTotalColIndex), scans)
 
 
-                        handler?.sendMessage(handler?.obtainMessage(Consts.SUCCESED_READ_FROM_DB, scanedURL))
+                        handler?.sendMessage(handler?.obtainMessage(Consts.SUCCESED_READ_URL_FROM_DB, scanedURL))
                     }
                     while (c.moveToNext())
                 }
@@ -88,7 +87,7 @@ class DBWorker(val context: Context, val command: String, val handler: Handler?,
                     val numberPositivesColIndex = c.getColumnIndex("number_positives")
                     val numberTotalColIndex = c.getColumnIndex("number_total")
 
-                    val scans = mutableListOf<ServicesResult>()
+                    val scans = mutableListOf<URLScanServicesResult>()
 
                     val addC = DBSheduler.db.rawQuery("SELECT * FROM additional WHERE url = \"" + selectionString + "\"", null)
                     if (addC.moveToFirst())
@@ -101,7 +100,7 @@ class DBWorker(val context: Context, val command: String, val handler: Handler?,
                         val addDetailColIndex = addC.getColumnIndex("detail")
                         do
                         {
-                            scans.add(ServicesResult(addC.getString(addServiceColIndex), addC.getString(addDetectedColIndex).toBoolean(),
+                            scans.add(URLScanServicesResult(addC.getString(addServiceColIndex), addC.getString(addDetectedColIndex).toBoolean(),
                                     addC.getString(addResultColIndex) ,addC.getString(addDetailColIndex)))
                         } while(addC.moveToNext())
                     }
@@ -113,7 +112,7 @@ class DBWorker(val context: Context, val command: String, val handler: Handler?,
                                 c.getInt(numberTotalColIndex), scans)
 
 
-                        handler?.sendMessage(handler?.obtainMessage(Consts.SUCCESED_READ_FROM_DB, scanedURL))
+                        handler?.sendMessage(handler?.obtainMessage(Consts.SUCCESED_READ_URL_FROM_DB, scanedURL))
                     }
                     while (c.moveToNext())
                     sleep(10000)
