@@ -18,7 +18,7 @@ import com.a1tt.security.data.ScanedURL
 import com.a1tt.security.data.URLScanServicesResult
 import com.a1tt.security.shedulers.DBURLWorker
 
-class SingleURLResult : Fragment() {
+class SingleURLAnalysResult : Fragment() {
 
     lateinit var myview : View
     lateinit var targetApplicationRecyclerView: RecyclerView
@@ -39,7 +39,7 @@ class SingleURLResult : Fragment() {
 
         val liveData = singleURLResultController.getData()
 
-        liveData.observe(this@SingleURLResult,  Observer<ScanedURL> {
+        liveData.observe(this@SingleURLAnalysResult,  Observer<ScanedURL> {
             myview.findViewById<TextView>(R.id.urlView).text = it?.scanedURL
             myview.findViewById<TextView>(R.id.scanDateView).text = it?.scanDate
             myview.findViewById<TextView>(R.id.verboseMsg).text = it?.verboseMsg
@@ -66,7 +66,7 @@ class SingleURLResult : Fragment() {
 
         override fun onCreateViewHolder(p0: ViewGroup, p1: Int): TargetURLHolder {
             val layoutInflater: LayoutInflater = LayoutInflater.from(activity)
-            val view: View = layoutInflater.inflate(R.layout.card_service_scan, p0, false)
+            val view: View = layoutInflater.inflate(R.layout.card_service_url_scan, p0, false)
             return TargetURLHolder(view)
         }
 

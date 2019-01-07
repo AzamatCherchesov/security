@@ -1,52 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/analysedAppIcon"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="2dp"
-        android:scaleType="fitXY"
-        app:layout_constraintCircleRadius="6dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
-    <TextView
-        android:id="@+id/analysedAppName"
-        android:maxWidth="200dp"
-        android:layout_marginStart="5dp"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/test"
-        android:textSize="15sp"
-        android:singleLine="false"
-        app:layout_constraintLeft_toRightOf="@+id/analysedAppIcon"
-        app:layout_constraintTop_toTopOf="parent"/>
+        android:padding="8dp">
 
-    <TextView
-        android:layout_marginStart="5dp"
-        android:id="@+id/analysedPackageName"
-        android:maxWidth="200dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/com_test"
-        android:textSize="15sp"
-        android:singleLine="false"
-        app:layout_constraintLeft_toRightOf="@+id/analysedAppIcon"
-        app:layout_constraintTop_toBottomOf="@+id/analysedAppName"/>
+        <ImageView
+            android:id="@+id/analysedAppIcon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:srcCompat="@drawable/banner" />
 
-    <TextView
-        android:layout_marginStart="5dp"
-        android:id="@+id/analysedTime"
-        android:maxWidth="200dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/result"
-        android:textSize="15sp"
-        app:layout_constraintLeft_toRightOf="@+id/analysedAppIcon"
-        app:layout_constraintTop_toBottomOf="@+id/analysedPackageName" />
-</android.support.constraint.ConstraintLayout>
+        <TextView
+            android:id="@+id/fileViewTitle"
+            style="@style/Base.TextAppearance.AppCompat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Scaned file:"
+            android:layout_below="@+id/analysedAppIcon"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/fileView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/fileViewTitle"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/scanDateViewTitle"
+            style="@style/Base.TextAppearance.AppCompat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/fileView"
+            android:text="Last scaned at:"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/scanDateView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/scanDateViewTitle"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/verboseMsgTitle"
+            style="@style/Base.TextAppearance.AppCompat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/scanDateView"
+            android:text="Verbose message:"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/verboseMsg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/verboseMsgTitle"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/detected"
+            style="@style/Base.TextAppearance.AppCompat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/verboseMsg"
+            android:text="Detected:"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/number1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/detected"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/clear_site"
+            style="@style/Base.TextAppearance.AppCompat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/number1"
+            android:text="Total:"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/number2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/clear_site"
+            android:textSize="18sp" />
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/delimeter_view"
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:background="@android:color/background_dark" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/scans_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+</LinearLayout>

@@ -56,7 +56,7 @@ class TargetAppListFragment : Fragment() {
             //make all methods private
             //TODO вынести listener - принять его как аргумент
             if (application.result == null) {
-                CheckAppFragment().setName(application.appName, application.apkFilePath).show(fragmentManager, "")
+                CheckAppFragment().setApplication(application).show(fragmentManager, "")
             } else {
                 MainActivity.router.navigateTo(fragmentFactory = {
                     val appAnalysResult = SingleAppAnalysResult()
@@ -88,14 +88,16 @@ class TargetAppListFragment : Fragment() {
             appName.text = application.appName
             packageName.text = application.packageName
             result.text = application.result
-            if (result.text != null && result.text != "") {
-                resultIcon.setImageResource(ic_app_checked_good)
-                resultIcon.setColorFilter(Color.GREEN)
-            } else {
-                resultIcon.setImageResource(ic_app_unchecked)
-                resultIcon.setColorFilter(Color.BLACK)
-            }
+            resultIcon.setImageResource(ic_app_unchecked)
+            resultIcon.setColorFilter(Color.BLACK)
             iconDrawable.setImageDrawable(application.icon)
+//            if (result.text != null && result.text != "") {
+//                resultIcon.setImageResource(ic_app_checked_good)
+//                resultIcon.setColorFilter(Color.GREEN)
+//            } else {
+//                resultIcon.setImageResource(ic_app_unchecked)
+//                resultIcon.setColorFilter(Color.BLACK)
+//            }
         }
     }
 

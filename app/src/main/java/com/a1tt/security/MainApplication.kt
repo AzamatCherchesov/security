@@ -2,6 +2,7 @@ package com.a1tt.security
 
 import android.app.Application
 import android.os.CountDownTimer
+import com.a1tt.security.data.SingleFileResultController
 import com.a1tt.security.data.SingleURLResultController
 import com.a1tt.security.shedulers.DBSheduler
 import java.util.concurrent.Executors
@@ -21,9 +22,10 @@ class MainApplication : Application() {
         var timerCounter: Long = 3000
 
         lateinit var dbSheduler: DBSheduler
-        val appDataManager = AppDataManager()
+        val appDataManager = InstalledAppsDataManager()
         val urlDataManager = URLDataManager()
         val singleURLResultController = SingleURLResultController()
+        val singleFileResultController = SingleFileResultController()
 
     }
 }

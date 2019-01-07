@@ -6,16 +6,21 @@ import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import com.a1tt.security.Consts
 import com.a1tt.security.MainActivity
+import com.a1tt.security.MainApplication
+import com.a1tt.security.data.TargetApplication
 import com.a1tt.security.shedulers.ScanFileSheduler
 import com.a1tt.security.shedulers.ScanURLSheduler
 
 class CheckAppFragment : DialogFragment() {
     lateinit var appName: String
     lateinit var apkFilePath: String
+    lateinit var application: TargetApplication
 
-    fun setName(appName: String, apkFilePath: String): CheckAppFragment {
-        this.appName = appName
-        this.apkFilePath = apkFilePath
+
+    fun setApplication(application: TargetApplication): CheckAppFragment {
+        this.appName = application.appName
+        this.apkFilePath = application.apkFilePath
+        this.application = application
         return this
     }
 
@@ -31,9 +36,9 @@ class CheckAppFragment : DialogFragment() {
                     val args: MutableList<Pair<String, String>> = mutableListOf(firstPair)
 
                     Thread(ScanFileSheduler(true, "https://www.virustotal.com/vtapi/v2/file/scan", args, MainActivity.mainHandler, apkFilePath, appName)).start()
-
-
-
+                    application.result = "sent for scan"
+                    MainApplication.appDataManager.removeApp(application)
+                    MainApplication.appDataManager.addApp(application)
 
 
 //                    Thread(Runnable {

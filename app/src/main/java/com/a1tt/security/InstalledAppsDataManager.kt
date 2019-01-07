@@ -3,7 +3,7 @@ package com.a1tt.security
 import android.support.v7.util.SortedList
 import com.a1tt.security.data.TargetApplication
 
-class AppDataManager : Observable() {
+class InstalledAppsDataManager : Observable() {
 
     private var mInstalledApplications: SortedList<TargetApplication> = SortedList<TargetApplication>(TargetApplication::class.java, object : SortedList.Callback<TargetApplication>() {
         override fun areItemsTheSame(p0: TargetApplication?, p1: TargetApplication?): Boolean {
@@ -11,19 +11,19 @@ class AppDataManager : Observable() {
         }
 
         override fun onMoved(p0: Int, p1: Int) {
-            this@AppDataManager.onMoved(p0, p1)
+            this@InstalledAppsDataManager.onMoved(p0, p1)
         }
 
         override fun onChanged(p0: Int, p1: Int) {
-           this@AppDataManager.onChanged(p0, p1, null)
+           this@InstalledAppsDataManager.onChanged(p0, p1, null)
         }
 
         override fun onInserted(p0: Int, p1: Int) {
-            this@AppDataManager.onInserted(p0, p1)
+            this@InstalledAppsDataManager.onInserted(p0, p1)
         }
 
         override fun onRemoved(p0: Int, p1: Int) {
-            this@AppDataManager.onRemoved(p0, p1)
+            this@InstalledAppsDataManager.onRemoved(p0, p1)
         }
 
         override fun compare(p0: TargetApplication?, p1: TargetApplication?): Int {
@@ -38,7 +38,6 @@ class AppDataManager : Observable() {
 
     fun addApp (application: TargetApplication) {
         mInstalledApplications.add(application)
-
     }
 
     fun removeApp (application: TargetApplication) {

@@ -17,12 +17,14 @@ import android.util.Log
 import android.view.View
 import android.widget.TextView
 import com.a1tt.security.AnalysResults.*
-import com.a1tt.security.AnalysResults.SingleURLResult.Companion.addResultsServices
+import com.a1tt.security.AnalysResults.SingleAppAnalysResult.Companion.addResultsAppServices
+import com.a1tt.security.AnalysResults.SingleURLAnalysResult.Companion.addResultsServices
 import com.a1tt.security.Consts.Companion.GET_SCAN_FILE_RESULT
 import com.a1tt.security.data.ScanedURL
 import com.a1tt.security.Consts.Companion.GET_SCAN_URL_RESULT
 import com.a1tt.security.Consts.Companion.GOT_SCAN_FILE_RESULT
 import com.a1tt.security.Consts.Companion.GOT_SCAN_URL_RESULT
+import com.a1tt.security.Consts.Companion.SUCCESED_READ_FILE_FROM_DB
 import com.a1tt.security.Consts.Companion.SUCCESED_READ_URL_FROM_DB
 import com.a1tt.security.Consts.Companion.SUCCESED_WRITE_FILE_TO_DB
 import com.a1tt.security.Consts.Companion.SUCCESED_WRITE_URL_TO_DB
@@ -113,22 +115,48 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                     }
                     SUCCESED_WRITE_FILE_TO_DB -> {
-                        MainApplication.dbSheduler.executor.execute(DBFileWorker(applicationContext, "select", this, null, (msg.obj as ScanedFile).scanedFile))
+                        val positives = (msg.obj as ScanedFile).numberPositives
+                        if (positives == 0) {
+//                            (msg.obj as ScanedFile).
+                        } else {
+
+                        }
+//                        if (result.text != null && result.text != "") {
+//                resultIcon.setImageResource(ic_app_checked_good)
+//                resultIcon.setColorFilter(Color.GREEN)
+//            } else {
+//                resultIcon.setImageResource(ic_app_unchecked)
+//                resultIcon.setColorFilter(Color.BLACK)
+//            }
                     }
                     SUCCESED_READ_URL_FROM_DB -> {
 
-//                        val existingFragment = supportFragmentManager?.findFragmentById(R.id.fragment_container)
-//                        when (existingFragment) {
-//                            is SingleURLResult -> {
-//                                if (existingFragment.isVisible) {
-//                                    MainApplication.singleURLResultController.liveData.postValue("new value")
-//                                }
-//                            }
-//                        }
+                        val existingFragment = supportFragmentManager?.findFragmentById(R.id.fragment_container)
+                        when (existingFragment) {
+                            is SingleURLAnalysResult -> {
+                                if (existingFragment.isVisible) {
+                                    addResultsServices((msg.obj as ScanedURL).scans)
+                                }
+                            }
+                        }
 
-                        addResultsServices((msg.obj as ScanedURL).scans)
+                        //addResultsServices((msg.obj as ScanedURL).scans)
                         MainApplication.singleURLResultController.liveData.postValue((msg.obj as ScanedURL))
                     }
+                    SUCCESED_READ_FILE_FROM_DB -> {
+                        val existingFragment = supportFragmentManager?.findFragmentById(R.id.fragment_container)
+                        when (existingFragment) {
+                            is SingleAppAnalysResult -> {
+                                if (existingFragment.isVisible) {
+                                    addResultsAppServices((msg.obj as ScanedFile).scans)
+                                }
+                            }
+                        }
+
+                        //addResultsServices((msg.obj as ScanedURL).scans)
+                        MainApplication.singleFileResultController.liveData.postValue((msg.obj as ScanedFile))
+                    }
+
                     else -> {
 
                     }
@@ -227,7 +255,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     fun test( view: View) {
 
         router.navigateTo(fragmentFactory =  {
-            val singleURLResult = SingleURLResult()
+            val singleURLResult = SingleURLAnalysResult()
             val bundle = Bundle()
             bundle.putString("url", view.findViewById<TextView>(R.id.card_title).text as String)
             singleURLResult.arguments = bundle
