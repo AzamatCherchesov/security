@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.os.Handler
 import com.a1tt.security.Consts
+import com.a1tt.security.MainApplication
 import com.a1tt.security.data.FileScanServicesResult
 import com.a1tt.security.data.ScanedFile
 
@@ -29,6 +30,31 @@ class DBFileWorker (val context: Context, val command: String, val handler: Hand
                     addCV.put("version", elem.version)
                     addCV.put("update_field", elem.update)
                     DBSheduler.db.insert("filesAdd", null, addCV)
+                }
+
+                val positives = scanedFile.numberPositives
+                if (positives == 0) {
+                    var index = 0;
+                    while (index < MainApplication.appDataManager.getAllInstalledApp().size()) {
+                        val app = MainApplication.appDataManager.getAllInstalledApp().get(index)
+                        if (app.appName.equals(scanedFile.scanedFile)) {
+                            MainApplication.appDataManager.removeApp(app)
+                            app.result = "clean"
+                            MainApplication.appDataManager.addApp(app)
+                        }
+                        index++
+                    }
+                } else {
+                    var index = 0;
+                    while (index < MainApplication.appDataManager.getAllInstalledApp().size()) {
+                        val app = MainApplication.appDataManager.getAllInstalledApp().get(index)
+                        if (app.appName.equals(scanedFile.scanedFile)) {
+                            MainApplication.appDataManager.removeApp(app)
+                            app.result = "bad"
+                            MainApplication.appDataManager.addApp(app)
+                        }
+                        index++
+                    }
                 }
 
                 handler?.sendMessage(handler?.obtainMessage(Consts.SUCCESED_WRITE_FILE_TO_DB, scanedFile))

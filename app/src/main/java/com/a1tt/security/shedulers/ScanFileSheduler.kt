@@ -108,6 +108,9 @@ class ScanFileSheduler (val isPOST: Boolean, val strURL: String, val args: Mutab
                 if (mainObject.getInt(Consts.RESPONCE_CODE_INT) == 1) {
                     handler.sendMessage(handler.obtainMessage(Consts.GOT_SCAN_FILE_RESULT, mainObject))
                 }
+                if (mainObject.getInt(Consts.RESPONCE_CODE_INT) == -2) {
+                    Thread(ScanFileSheduler(isPOST, strURL, args, handler, apkFilePath, app_name)).start()
+                }
             }
             connection.disconnect()
         }

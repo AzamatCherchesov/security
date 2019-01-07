@@ -80,7 +80,6 @@ class SingleAppAnalysResult : Fragment() {
         }
 
         override fun getItemCount(): Int {
-//            return 20
             return scanServicesList.size
         }
 

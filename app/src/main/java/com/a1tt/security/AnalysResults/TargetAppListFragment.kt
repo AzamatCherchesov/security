@@ -17,8 +17,7 @@ import android.widget.TextView
 import com.a1tt.security.MainActivity
 import com.a1tt.security.MainApplication
 import com.a1tt.security.R
-import com.a1tt.security.R.drawable.ic_app_checked_good
-import com.a1tt.security.R.drawable.ic_app_unchecked
+import com.a1tt.security.R.drawable.*
 import com.a1tt.security.data.TargetApplication
 
 class TargetAppListFragment : Fragment() {
@@ -91,13 +90,14 @@ class TargetAppListFragment : Fragment() {
             resultIcon.setImageResource(ic_app_unchecked)
             resultIcon.setColorFilter(Color.BLACK)
             iconDrawable.setImageDrawable(application.icon)
-//            if (result.text != null && result.text != "") {
-//                resultIcon.setImageResource(ic_app_checked_good)
-//                resultIcon.setColorFilter(Color.GREEN)
-//            } else {
-//                resultIcon.setImageResource(ic_app_unchecked)
-//                resultIcon.setColorFilter(Color.BLACK)
-//            }
+            if(result.text.equals("clean")) {
+                resultIcon.setImageResource(ic_app_checked_good)
+                resultIcon.setColorFilter(Color.GREEN)
+            }
+            if(result.text.equals("bad")) {
+                resultIcon.setImageResource(ic_app_checked_virus)
+                resultIcon.setColorFilter(Color.RED)
+            }
         }
     }
 

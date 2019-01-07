@@ -115,12 +115,28 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                     }
                     SUCCESED_WRITE_FILE_TO_DB -> {
-                        val positives = (msg.obj as ScanedFile).numberPositives
-                        if (positives == 0) {
-//                            (msg.obj as ScanedFile).
-                        } else {
-
-                        }
+//                        val positives = (msg.obj as ScanedFile).numberPositives
+//                        if (positives == 0) {
+//                            var index = 0;
+//                            while (index < MainApplication.appDataManager.getAllInstalledApp().size()) {
+//                                val app = MainApplication.appDataManager.getAllInstalledApp().get(index)
+//                                if (app.appName.equals((msg.obj as ScanedFile).scanedFile)) {
+//                                    MainApplication.appDataManager.removeApp(app)
+//                                    app.result = "clean"
+//                                    MainApplication.appDataManager.addApp(app)
+//                                }
+//                            }
+//                        } else {
+//                            var index = 0;
+//                            while (index < MainApplication.appDataManager.getAllInstalledApp().size()) {
+//                                val app = MainApplication.appDataManager.getAllInstalledApp().get(index)
+//                                if (app.appName.equals((msg.obj as ScanedFile).scanedFile)) {
+//                                    MainApplication.appDataManager.removeApp(app)
+//                                    app.result = "bad"
+//                                    MainApplication.appDataManager.addApp(app)
+//                                }
+//                            }
+//                        }
 //                        if (result.text != null && result.text != "") {
 //                resultIcon.setImageResource(ic_app_checked_good)
 //                resultIcon.setColorFilter(Color.GREEN)
