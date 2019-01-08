@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -13,16 +12,15 @@
         <ImageView
             android:id="@+id/analysedAppIcon"
             android:layout_width="50dp"
-            android:layout_height="50dp"
-            app:srcCompat="@drawable/banner" />
+            android:layout_height="50dp" />
 
         <TextView
             android:id="@+id/fileViewTitle"
             style="@style/Base.TextAppearance.AppCompat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/analysedAppIcon"
             android:text="Scanned file:"
-            android:layout_below="@+id/analysedAppIcon"
             android:textSize="18sp" />
 
         <TextView
@@ -30,6 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/fileViewTitle"
+            android:layout_toRightOf="@+id/analysedAppIcon"
             android:textSize="18sp" />
 
         <TextView
@@ -77,7 +76,9 @@
             android:id="@+id/number1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/detected"
+            android:layout_toRightOf="@+id/detected"
+            android:layout_below="@+id/verboseMsg"
+            android:text="test"
             android:textSize="18sp" />
 
         <TextView
@@ -85,7 +86,7 @@
             style="@style/Base.TextAppearance.AppCompat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/number1"
+            android:layout_below="@+id/detected"
             android:text="Total:"
             android:textSize="18sp" />
 
@@ -93,7 +94,9 @@
             android:id="@+id/number2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/clear_site"
+            android:layout_toRightOf="@+id/clear_site"
+            android:text="test"
+            android:layout_below="@+id/detected"
             android:textSize="18sp" />
 
     </RelativeLayout>

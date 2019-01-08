@@ -1,6 +1,7 @@
 package com.a1tt.security
 
 import android.app.Application
+import android.graphics.Bitmap
 import android.os.CountDownTimer
 import com.a1tt.security.data.SingleFileResultController
 import com.a1tt.security.data.SingleURLResultController
@@ -13,6 +14,7 @@ class MainApplication : Application() {
         super.onCreate()
         instance = this
         dbScheduler = DBScheduler(Executors.newSingleThreadExecutor(), applicationContext)
+        appsIcons = HashMap<String, Bitmap> ()
     }
 
     companion object {
@@ -20,6 +22,7 @@ class MainApplication : Application() {
             private set
         var countDownTimer: CountDownTimer? = null
         var timerCounter: Long = 3000
+        lateinit var appsIcons: HashMap<String, Bitmap>
 
         lateinit var dbScheduler: DBScheduler
         val appDataManager = InstalledAppsDataManager()

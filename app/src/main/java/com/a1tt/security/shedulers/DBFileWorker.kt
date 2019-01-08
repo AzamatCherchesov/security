@@ -19,7 +19,7 @@ class DBFileWorker(val context: Context, private val command: String, private va
                 cv.put("verbose_msg", scannedFile?.verboseMsg)
                 cv.put("number_positives", scannedFile?.numberPositives)
                 cv.put("number_total", scannedFile?.numberTotal)
-                DBScheduler.db.insert("files", null, cv)
+                val c = DBScheduler.db.insert("files", null, cv)
 
                 for (elem in scannedFile?.scans!!) {
                     val addCV = ContentValues()

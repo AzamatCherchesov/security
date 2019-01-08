@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Security</string>
+    <string name="open">open</string>
+    <string name="close">close</string>
+    <string name="action_settings">settings</string>
+    <string name="result">result</string>
+    <string name="com_test">com.test</string>
+    <string name="test">Test</string>
+    <string name="result_icon">result_icon</string>
+    <string name="app_icon">app_icon</string>
+    <string name="search">search</string>
+    <string name="installed_apps">Установленные приложения</string>
+    <string name="results">Результаты</string>
+    <string name="scan_url">Проверка ссылки</string>
+    <string name="security_application">Security application</string>
+    <string name="developer_cherchesov_azamat">разработчик - Черчесов Азамат</string>
+    <string name="total">Всего:</string>
+    <string name="detected">Детектировано:</string>
+    <string name="verbose_message">Дополнительная информация:</string>
+    <string name="last_scanned_at">Дата последней проверки:</string>
+    <string name="scanned_url">Проверенная ссылка:</string>
+</resources>

@@ -16,6 +16,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.a1tt.security.MainActivity
 import com.a1tt.security.MainApplication
+import com.a1tt.security.MainApplication.Companion.appsIcons
 import com.a1tt.security.R
 import com.a1tt.security.R.drawable.*
 import com.a1tt.security.data.TargetApplication
@@ -87,7 +88,9 @@ class TargetAppListFragment : Fragment() {
             result.text = application.result
             resultIcon.setImageResource(ic_app_unchecked)
             resultIcon.setColorFilter(Color.BLACK)
-            iconDrawable.setImageDrawable(application.icon)
+            iconDrawable.setImageBitmap(appsIcons.get(application.packageName))
+//            iconDrawable.setImageDrawable(appsIcons.get(application.packageName))
+//            iconDrawable.setImageDrawable(application.icon)
             if (result.text.equals("clean")) {
                 resultIcon.setImageResource(ic_app_checked_good)
                 resultIcon.setColorFilter(Color.GREEN)

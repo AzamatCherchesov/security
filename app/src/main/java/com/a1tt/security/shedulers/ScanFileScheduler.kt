@@ -59,7 +59,7 @@ class ScanFileScheduler(private val isPOST: Boolean, private val strURL: String,
             }
             connection.disconnect()
         } else {
-            sleep(40000)
+            sleep(15000)
             val connection: HttpsURLConnection = URL(strURL).openConnection() as HttpsURLConnection
             connection.requestMethod = "GET"
             connection.connectTimeout = 5000

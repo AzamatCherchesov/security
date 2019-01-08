@@ -14,6 +14,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.a1tt.security.MainActivity
 import com.a1tt.security.MainApplication
+import com.a1tt.security.MainApplication.Companion.appsIcons
 import com.a1tt.security.R
 import com.a1tt.security.data.FileScanServicesResult
 import com.a1tt.security.data.ScannedFile
@@ -40,12 +41,15 @@ class SingleAppAnalysResult : Fragment() {
 
         mAnalysView = inflater.inflate(R.layout.single_app_analys_result, container, false)
         val imageView = mAnalysView.findViewById<ImageView>(R.id.analysedAppIcon)
-        imageView.setImageDrawable(mTargetApplication.icon)
+        imageView.setImageBitmap(appsIcons.get(mTargetApplication.packageName))
+        mAnalysView.findViewById<TextView>(R.id.fileView).text = mTargetApplication.appName
+//        imageView.setImageDrawable(appsIcons.get(mTargetApplication.packageName))
+//        imageView.setImageDrawable(mTargetApplication.icon)
 
         val liveData = MainApplication.singleFileResultController.getData()
 
         liveData.observe(this@SingleAppAnalysResult, Observer<ScannedFile> {
-            mAnalysView.findViewById<TextView>(R.id.fileView).text = it?.scannedFile
+//            mAnalysView.findViewById<TextView>(R.id.fileView).text = it?.scannedFile
             mAnalysView.findViewById<TextView>(R.id.scanDateView).text = it?.scanDate
             mAnalysView.findViewById<TextView>(R.id.verboseMsg).text = it?.verboseMsg
             mAnalysView.findViewById<TextView>(R.id.number1).text = it?.numberPositives.toString()
@@ -58,7 +62,7 @@ class SingleAppAnalysResult : Fragment() {
         mAdapter = TargetAppAdapter()
         mRecyclerView.adapter = mAdapter
 
-        MainApplication.dbScheduler.executor.execute(DBFileWorker(activity!!.applicationContext, "select", MainActivity.mainHandler, null, mTargetApplication.appName))
+        MainApplication.dbScheduler.executor.execute(DBFileWorker(activity!!.applicationContext, "select", MainActivity.mainHandler, null, mTargetApplication.packageName))
         return mAnalysView
     }
 
