@@ -3,41 +3,41 @@ package com.a1tt.security.shedulers
 import android.content.ContentValues
 import android.content.Context
 import android.os.Handler
-import com.a1tt.security.Consts
+import com.a1tt.security.Constants
 import com.a1tt.security.MainApplication
 import com.a1tt.security.data.FileScanServicesResult
-import com.a1tt.security.data.ScanedFile
+import com.a1tt.security.data.ScannedFile
 
-class DBFileWorker (val context: Context, val command: String, val handler: Handler?, val scanedFile: ScanedFile?, val selectionString : String?): Runnable {
+class DBFileWorker(val context: Context, private val command: String, private val handler: Handler?, private val scannedFile: ScannedFile?, private val selectionString: String?) : Runnable {
     override fun run() {
 
         when (command) {
             "add" -> {
                 val cv = ContentValues()
-                cv.put("scaned_file", scanedFile?.scanedFile)
-                cv.put("scan_date", scanedFile?.scanDate)
-                cv.put("verbose_msg", scanedFile?.verboseMsg)
-                cv.put("number_positives", scanedFile?.numberPositives)
-                cv.put("number_total", scanedFile?.numberTotal)
-                val rowID = DBSheduler.db.insert("files", null, cv)
+                cv.put("scanned_file", scannedFile?.scannedFile)
+                cv.put("scan_date", scannedFile?.scanDate)
+                cv.put("verbose_msg", scannedFile?.verboseMsg)
+                cv.put("number_positives", scannedFile?.numberPositives)
+                cv.put("number_total", scannedFile?.numberTotal)
+                DBScheduler.db.insert("files", null, cv)
 
-                for (elem in scanedFile?.scans!!) {
+                for (elem in scannedFile?.scans!!) {
                     val addCV = ContentValues()
-                    addCV.put("scaned_file", scanedFile?.scanedFile)
+                    addCV.put("scanned_file", scannedFile.scannedFile)
                     addCV.put("service", elem.serviceName)
                     addCV.put("detected", elem.detected.toString())
                     addCV.put("result", elem.result)
                     addCV.put("version", elem.version)
                     addCV.put("update_field", elem.update)
-                    DBSheduler.db.insert("filesAdd", null, addCV)
+                    DBScheduler.db.insert("filesAdd", null, addCV)
                 }
 
-                val positives = scanedFile.numberPositives
+                val positives = scannedFile.numberPositives
                 if (positives == 0) {
-                    var index = 0;
+                    var index = 0
                     while (index < MainApplication.appDataManager.getAllInstalledApp().size()) {
                         val app = MainApplication.appDataManager.getAllInstalledApp().get(index)
-                        if (app.appName.equals(scanedFile.scanedFile)) {
+                        if (app.packageName.equals(scannedFile.scannedFile)) {
                             MainApplication.appDataManager.removeApp(app)
                             app.result = "clean"
                             MainApplication.appDataManager.addApp(app)
@@ -45,10 +45,10 @@ class DBFileWorker (val context: Context, val command: String, val handler: Hand
                         index++
                     }
                 } else {
-                    var index = 0;
+                    var index = 0
                     while (index < MainApplication.appDataManager.getAllInstalledApp().size()) {
                         val app = MainApplication.appDataManager.getAllInstalledApp().get(index)
-                        if (app.appName.equals(scanedFile.scanedFile)) {
+                        if (app.appName.equals(scannedFile.scannedFile)) {
                             MainApplication.appDataManager.removeApp(app)
                             app.result = "bad"
                             MainApplication.appDataManager.addApp(app)
@@ -57,15 +57,13 @@ class DBFileWorker (val context: Context, val command: String, val handler: Hand
                     }
                 }
 
-                handler?.sendMessage(handler?.obtainMessage(Consts.SUCCESED_WRITE_FILE_TO_DB, scanedFile))
+                handler?.sendMessage(handler.obtainMessage(Constants.SUCCESED_WRITE_FILE_TO_DB, scannedFile))
 
             }
             "select" -> {
-                val c = DBSheduler.db.rawQuery("SELECT * FROM files WHERE scaned_file = \"" + selectionString + "\"", null)
-                if (c.moveToFirst())
-                {
-                    val idColIndex = c.getColumnIndex("id")
-                    val scanedFileColIndex = c.getColumnIndex("scaned_file")
+                val c = DBScheduler.db.rawQuery(String.format("SELECT * FROM files WHERE scanned_file = \"%s\"", selectionString), null)
+                if (c.moveToFirst()) {
+                    val scannedFileColIndex = c.getColumnIndex("scanned_file")
                     val scanDateColIndex = c.getColumnIndex("scan_date")
                     val verboseMsgColIndex = c.getColumnIndex("verbose_msg")
                     val numberPositivesColIndex = c.getColumnIndex("number_positives")
@@ -73,31 +71,25 @@ class DBFileWorker (val context: Context, val command: String, val handler: Hand
 
                     val scans = mutableListOf<FileScanServicesResult>()
 
-                    val addC = DBSheduler.db.rawQuery("SELECT * FROM filesAdd WHERE scaned_file = \"" + selectionString + "\"", null)
-                    if (addC.moveToFirst())
-                    {
-                        val addIdColIndex = addC.getColumnIndex("id")
-                        val addScanedFileColIndex = c.getColumnIndex("scaned_file")
+                    val addC = DBScheduler.db.rawQuery(String.format("SELECT * FROM filesAdd WHERE scanned_file = \"%s\"", selectionString), null)
+                    if (addC.moveToFirst()) {
                         val addServiceColIndex = addC.getColumnIndex("service")
                         val addDetectedColIndex = addC.getColumnIndex("detected")
                         val addResultColIndex = addC.getColumnIndex("result")
                         val addVersionColIndex = addC.getColumnIndex("version")
                         val addUpdateColIndex = addC.getColumnIndex("update_field")
-                        do
-                        {
-                            scans.add(FileScanServicesResult(addC.getString(addServiceColIndex), addC.getString(addDetectedColIndex).toBoolean(),
-                                    addC.getString(addVersionColIndex) ,addC.getString(addResultColIndex) ,addC.getString(addUpdateColIndex)))
-                        } while(addC.moveToNext())
+                        do {
+                            scans.add(FileScanServicesResult(addC.getString(addServiceColIndex), addC.getString(addDetectedColIndex)!!.toBoolean(),
+                                    addC.getString(addVersionColIndex), addC.getString(addResultColIndex), addC.getString(addUpdateColIndex)))
+                        } while (addC.moveToNext())
                     }
                     addC.close()
 
-                    do
-                    {
-                        val scanedFile = ScanedFile(c.getString(scanedFileColIndex), c.getString(scanDateColIndex), c.getString(verboseMsgColIndex),
+                    do {
+                        val scannedFile = ScannedFile(c.getString(scannedFileColIndex), c.getString(scanDateColIndex), c.getString(verboseMsgColIndex),
                                 c.getInt(numberPositivesColIndex), c.getInt(numberTotalColIndex), scans)
-                        handler?.sendMessage(handler?.obtainMessage(Consts.SUCCESED_READ_FILE_FROM_DB, scanedFile))
-                    }
-                    while (c.moveToNext())
+                        handler?.sendMessage(handler.obtainMessage(Constants.SUCCESED_READ_FILE_FROM_DB, scannedFile))
+                    } while (c.moveToNext())
                 }
                 c.close()
             }

@@ -16,16 +16,15 @@ import com.a1tt.security.MainActivity
 import com.a1tt.security.MainApplication
 import com.a1tt.security.R
 import com.a1tt.security.data.FileScanServicesResult
-import com.a1tt.security.data.ScanedFile
+import com.a1tt.security.data.ScannedFile
 import com.a1tt.security.data.TargetApplication
 import com.a1tt.security.shedulers.DBFileWorker
-import com.a1tt.security.shedulers.DBURLWorker
 
 class SingleAppAnalysResult : Fragment() {
 
     lateinit var mTargetApplication: TargetApplication
-    lateinit var myview : View
-    lateinit var targetApplicationRecyclerView: RecyclerView
+    lateinit var mAnalysView: View
+    lateinit var mRecyclerView: RecyclerView
 
     fun setApplication(targetApplication: TargetApplication) {
         mTargetApplication = targetApplication
@@ -39,28 +38,28 @@ class SingleAppAnalysResult : Fragment() {
         (activity as AppCompatActivity).supportActionBar?.title = "Analyses result"
         (activity as AppCompatActivity).findViewById<View>(R.id.search)?.visibility = GONE
 
-        myview = inflater.inflate(R.layout.single_app_analys_result, container, false)
-        val imageView = myview.findViewById<ImageView>(R.id.analysedAppIcon)
+        mAnalysView = inflater.inflate(R.layout.single_app_analys_result, container, false)
+        val imageView = mAnalysView.findViewById<ImageView>(R.id.analysedAppIcon)
         imageView.setImageDrawable(mTargetApplication.icon)
 
         val liveData = MainApplication.singleFileResultController.getData()
 
-        liveData.observe(this@SingleAppAnalysResult,  Observer<ScanedFile> {
-            myview.findViewById<TextView>(R.id.fileView).text = it?.scanedFile
-            myview.findViewById<TextView>(R.id.scanDateView).text = it?.scanDate
-            myview.findViewById<TextView>(R.id.verboseMsg).text = it?.verboseMsg
-            myview.findViewById<TextView>(R.id.number1).text = it?.numberPositives.toString()
-            myview.findViewById<TextView>(R.id.number2).text = it?.numberTotal.toString()
+        liveData.observe(this@SingleAppAnalysResult, Observer<ScannedFile> {
+            mAnalysView.findViewById<TextView>(R.id.fileView).text = it?.scannedFile
+            mAnalysView.findViewById<TextView>(R.id.scanDateView).text = it?.scanDate
+            mAnalysView.findViewById<TextView>(R.id.verboseMsg).text = it?.verboseMsg
+            mAnalysView.findViewById<TextView>(R.id.number1).text = it?.numberPositives.toString()
+            mAnalysView.findViewById<TextView>(R.id.number2).text = it?.numberTotal.toString()
         })
 
-        targetApplicationRecyclerView = myview.findViewById(R.id.scans_recycler) as RecyclerView
-        targetApplicationRecyclerView.layoutManager = LinearLayoutManager(activity)
+        mRecyclerView = mAnalysView.findViewById(R.id.scans_recycler) as RecyclerView
+        mRecyclerView.layoutManager = LinearLayoutManager(activity)
 
         mAdapter = TargetAppAdapter()
-        targetApplicationRecyclerView.adapter = mAdapter
+        mRecyclerView.adapter = mAdapter
 
-        MainApplication.dbSheduler.executor.execute(DBFileWorker(activity!!.applicationContext, "select", MainActivity.mainHandler, null, mTargetApplication.appName))
-        return myview
+        MainApplication.dbScheduler.executor.execute(DBFileWorker(activity!!.applicationContext, "select", MainActivity.mainHandler, null, mTargetApplication.appName))
+        return mAnalysView
     }
 
     inner class TargetAppHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -83,8 +82,6 @@ class SingleAppAnalysResult : Fragment() {
             return scanServicesList.size
         }
 
-
-
         override fun onBindViewHolder(holder: TargetAppHolder, position: Int) {
             holder.service_name.text = scanServicesList[position].serviceName
             holder.service_detected.text = scanServicesList[position].detected.toString()
@@ -99,6 +96,7 @@ class SingleAppAnalysResult : Fragment() {
             scanServicesList = items
             mAdapter.notifyDataSetChanged()
         }
+
         lateinit var mAdapter: TargetAppAdapter
         var scanServicesList: MutableList<FileScanServicesResult> = mutableListOf<FileScanServicesResult>()
     }

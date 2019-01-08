@@ -15,7 +15,7 @@ class InstalledAppsDataManager : Observable() {
         }
 
         override fun onChanged(p0: Int, p1: Int) {
-           this@InstalledAppsDataManager.onChanged(p0, p1, null)
+            this@InstalledAppsDataManager.onChanged(p0, p1, null)
         }
 
         override fun onInserted(p0: Int, p1: Int) {
@@ -36,15 +36,15 @@ class InstalledAppsDataManager : Observable() {
 
     })
 
-    fun addApp (application: TargetApplication) {
+    fun addApp(application: TargetApplication) {
         mInstalledApplications.add(application)
     }
 
-    fun removeApp (application: TargetApplication) {
+    fun removeApp(application: TargetApplication) {
         mInstalledApplications.remove(application)
     }
 
-    fun getAllInstalledApp (): SortedList<TargetApplication> {
+    fun getAllInstalledApp(): SortedList<TargetApplication> {
         return mInstalledApplications
     }
 }

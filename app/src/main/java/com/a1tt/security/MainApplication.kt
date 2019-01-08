@@ -4,7 +4,7 @@ import android.app.Application
 import android.os.CountDownTimer
 import com.a1tt.security.data.SingleFileResultController
 import com.a1tt.security.data.SingleURLResultController
-import com.a1tt.security.shedulers.DBSheduler
+import com.a1tt.security.shedulers.DBScheduler
 import java.util.concurrent.Executors
 
 class MainApplication : Application() {
@@ -12,7 +12,7 @@ class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
-        dbSheduler = DBSheduler(Executors.newSingleThreadExecutor(), applicationContext)
+        dbScheduler = DBScheduler(Executors.newSingleThreadExecutor(), applicationContext)
     }
 
     companion object {
@@ -21,11 +21,10 @@ class MainApplication : Application() {
         var countDownTimer: CountDownTimer? = null
         var timerCounter: Long = 3000
 
-        lateinit var dbSheduler: DBSheduler
+        lateinit var dbScheduler: DBScheduler
         val appDataManager = InstalledAppsDataManager()
         val urlDataManager = URLDataManager()
         val singleURLResultController = SingleURLResultController()
         val singleFileResultController = SingleFileResultController()
-
     }
 }

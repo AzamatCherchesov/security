@@ -14,7 +14,7 @@
             style="@style/Base.TextAppearance.AppCompat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Scaned URL:"
+            android:text="@string/scanned_url"
             android:textSize="18sp" />
 
         <TextView
@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/urlView"
-            android:text="Last scaned at:"
+            android:text="@string/last_scanned_at"
             android:textSize="18sp" />
 
         <TextView
@@ -46,7 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/scanDateView"
-            android:text="Verbose message:"
+            android:text="@string/verbose_message"
             android:textSize="18sp" />
 
         <TextView
@@ -62,7 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/verboseMsg"
-            android:text="Detected:"
+            android:text="@string/detected"
             android:textSize="18sp" />
 
         <TextView
@@ -78,7 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/number1"
-            android:text="Total:"
+            android:text="@string/total"
             android:textSize="18sp" />
 
         <TextView

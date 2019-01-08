@@ -21,7 +21,7 @@ import com.a1tt.security.R.drawable.*
 import com.a1tt.security.data.TargetApplication
 
 class TargetAppListFragment : Fragment() {
-    lateinit var targetApplicationRecyclerView: RecyclerView
+    lateinit var mRecyclerView: RecyclerView
     lateinit var mAdapter: TargetAppAdapter
 
     override fun onDetach() {
@@ -42,18 +42,16 @@ class TargetAppListFragment : Fragment() {
         (activity as AppCompatActivity).findViewById<View>(R.id.search)?.visibility = VISIBLE
 
         val view: View = inflater.inflate(R.layout.target_app_list, container, false)
-        targetApplicationRecyclerView = view.findViewById(R.id.target_app_list_recycler_view) as RecyclerView
-        targetApplicationRecyclerView.layoutManager = LinearLayoutManager(activity)
+        mRecyclerView = view.findViewById(R.id.target_app_list_recycler_view) as RecyclerView
+        mRecyclerView.layoutManager = LinearLayoutManager(activity)
 
         mAdapter = TargetAppAdapter()
-        targetApplicationRecyclerView.adapter = mAdapter
+        mRecyclerView.adapter = mAdapter
         return view
     }
 
     inner class TargetAppHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         override fun onClick(p0: View?) {
-            //make all methods private
-            //TODO вынести listener - принять его как аргумент
             if (application.result == null) {
                 CheckAppFragment().setApplication(application).show(fragmentManager, "")
             } else {
@@ -90,11 +88,11 @@ class TargetAppListFragment : Fragment() {
             resultIcon.setImageResource(ic_app_unchecked)
             resultIcon.setColorFilter(Color.BLACK)
             iconDrawable.setImageDrawable(application.icon)
-            if(result.text.equals("clean")) {
+            if (result.text.equals("clean")) {
                 resultIcon.setImageResource(ic_app_checked_good)
                 resultIcon.setColorFilter(Color.GREEN)
             }
-            if(result.text.equals("bad")) {
+            if (result.text.equals("bad")) {
                 resultIcon.setImageResource(ic_app_checked_virus)
                 resultIcon.setColorFilter(Color.RED)
             }

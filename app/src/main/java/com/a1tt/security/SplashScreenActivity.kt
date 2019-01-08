@@ -6,12 +6,11 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.support.v7.app.AppCompatActivity
 import android.view.View
-import com.a1tt.security.MainApplication.Companion.countDownTimer
-import com.a1tt.security.MainApplication.Companion.timerCounter
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
-import com.a1tt.security.shedulers.AppListSheduler
-
+import com.a1tt.security.MainApplication.Companion.countDownTimer
+import com.a1tt.security.MainApplication.Companion.timerCounter
+import com.a1tt.security.shedulers.AppListScheduler
 
 class SplashScreenActivity : AppCompatActivity() {
 
@@ -23,7 +22,7 @@ class SplashScreenActivity : AppCompatActivity() {
     override fun onPostResume() {
         super.onPostResume()
 
-        Thread(AppListSheduler(this as Context, null)).start()
+        Thread(AppListScheduler(this as Context, null)).start()
 
         if (countDownTimer != null) {
             countDownTimer!!.cancel()

@@ -14,4 +14,9 @@
     <string name="scan_url">Scan URL</string>
     <string name="security_application">Security application</string>
     <string name="developer_cherchesov_azamat">developer - Cherchesov Azamat</string>
+    <string name="total">Total:</string>
+    <string name="detected">Detected:</string>
+    <string name="verbose_message">Verbose message:</string>
+    <string name="last_scanned_at">Last scanned at:</string>
+    <string name="scanned_url">Scanned URL:</string>
 </resources>

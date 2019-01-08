@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteOpenHelper
 
 data class DBHelper(val context: Context) : SQLiteOpenHelper(context, "myDB", null, 1) {
     override fun onCreate(db: SQLiteDatabase?) {
-        // создаем таблицу с полями
         db?.execSQL("create table mytable ("
                 + "id integer primary key autoincrement,"
                 + "url text,"
@@ -25,7 +24,7 @@ data class DBHelper(val context: Context) : SQLiteOpenHelper(context, "myDB", nu
 
         db?.execSQL("create table files ("
                 + "id integer primary key autoincrement,"
-                + "scaned_file text,"
+                + "scanned_file text,"
                 + "scan_date text,"
                 + "verbose_msg text,"
                 + "number_positives number,"
@@ -33,17 +32,12 @@ data class DBHelper(val context: Context) : SQLiteOpenHelper(context, "myDB", nu
 
         db?.execSQL("create table filesAdd ("
                 + "id integer primary key autoincrement,"
-                + "scaned_file text,"
+                + "scanned_file text,"
                 + "service text,"
                 + "detected text,"
                 + "result text,"
                 + "version text,"
                 + "update_field text" + ");")
-
-//        db?.execSQL("create table mytable ("
-//                + "id integer primary key autoincrement,"
-//                + "url text,"
-//                + "scan_date text" + ");");
     }
 
     override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {

@@ -1,41 +1,41 @@
 package com.a1tt.security
 
 import android.annotation.SuppressLint
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
+import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
+import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.support.design.widget.NavigationView
-import android.support.v4.widget.DrawerLayout
-import android.support.v7.widget.SearchView
-import android.util.Log
 import android.view.View
 import android.widget.TextView
 import com.a1tt.security.AnalysResults.*
 import com.a1tt.security.AnalysResults.SingleAppAnalysResult.Companion.addResultsAppServices
 import com.a1tt.security.AnalysResults.SingleURLAnalysResult.Companion.addResultsServices
-import com.a1tt.security.Consts.Companion.GET_SCAN_FILE_RESULT
-import com.a1tt.security.data.ScanedURL
-import com.a1tt.security.Consts.Companion.GET_SCAN_URL_RESULT
-import com.a1tt.security.Consts.Companion.GOT_SCAN_FILE_RESULT
-import com.a1tt.security.Consts.Companion.GOT_SCAN_URL_RESULT
-import com.a1tt.security.Consts.Companion.SUCCESED_READ_FILE_FROM_DB
-import com.a1tt.security.Consts.Companion.SUCCESED_READ_URL_FROM_DB
-import com.a1tt.security.Consts.Companion.SUCCESED_WRITE_FILE_TO_DB
-import com.a1tt.security.Consts.Companion.SUCCESED_WRITE_URL_TO_DB
+import com.a1tt.security.Constants.Companion.GET_SCAN_FILE_RESULT
+import com.a1tt.security.Constants.Companion.GET_SCAN_URL_RESULT
+import com.a1tt.security.Constants.Companion.GOT_SCAN_FILE_RESULT
+import com.a1tt.security.Constants.Companion.GOT_SCAN_URL_RESULT
+import com.a1tt.security.Constants.Companion.SUCCESED_READ_FILE_FROM_DB
+import com.a1tt.security.Constants.Companion.SUCCESED_READ_URL_FROM_DB
+import com.a1tt.security.Constants.Companion.SUCCESED_WRITE_FILE_TO_DB
+import com.a1tt.security.Constants.Companion.SUCCESED_WRITE_URL_TO_DB
 import com.a1tt.security.DB.DBHelper
 import com.a1tt.security.data.FileScanServicesResult
-import com.a1tt.security.data.ScanedFile
+import com.a1tt.security.data.ScannedFile
+import com.a1tt.security.data.ScannedURL
 import com.a1tt.security.data.URLScanServicesResult
 import com.a1tt.security.shedulers.DBFileWorker
 import com.a1tt.security.shedulers.DBURLWorker
-import com.a1tt.security.shedulers.ScanFileSheduler
-import com.a1tt.security.shedulers.ScanURLSheduler
+import com.a1tt.security.shedulers.ScanFileScheduler
+import com.a1tt.security.shedulers.ScanURLScheduler
 import org.json.JSONObject
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -64,18 +64,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             override fun handleMessage(msg: Message) {
                 when (msg.what) {
                     GET_SCAN_URL_RESULT -> {
-                        val firstPair = Pair(Consts.APIKEY_STR, "746cdb67b9f9ef1b202e04051b84bbec8756e908a0b6a7b6ed409b7f0a616225")
-                        val secondPair = Pair(Consts.RESOURCE_STR, (msg.obj as String))
-                        val thirdPair = Pair(Consts.ALLINFO_BOOL, "true")
+                        val firstPair = Pair(Constants.APIKEY_STR, "746cdb67b9f9ef1b202e04051b84bbec8756e908a0b6a7b6ed409b7f0a616225")
+                        val secondPair = Pair(Constants.RESOURCE_STR, (msg.obj as String))
+                        val thirdPair = Pair(Constants.ALLINFO_BOOL, "true")
                         val args: MutableList<Pair<String, String>> = mutableListOf(firstPair, secondPair, thirdPair)
-                        Thread(ScanURLSheduler(false, "https://www.virustotal.com/vtapi/v2/url/report", args, this)).start()
+                        Thread(ScanURLScheduler(false, "https://www.virustotal.com/vtapi/v2/url/report", args, this)).start()
                     }
-                    GET_SCAN_FILE_RESULT ->{
-                        val firstPair = Pair(Consts.APIKEY_STR, "746cdb67b9f9ef1b202e04051b84bbec8756e908a0b6a7b6ed409b7f0a616225")
-                        val secondPair = Pair(Consts.RESOURCE_STR, (msg.obj as JSONObject).getString("scan_id"))
-                        val thirdPair = Pair(Consts.ALLINFO_BOOL, "true")
+                    GET_SCAN_FILE_RESULT -> {
+                        val firstPair = Pair(Constants.APIKEY_STR, "746cdb67b9f9ef1b202e04051b84bbec8756e908a0b6a7b6ed409b7f0a616225")
+                        val secondPair = Pair(Constants.RESOURCE_STR, (msg.obj as JSONObject).getString("scan_id"))
+                        val thirdPair = Pair(Constants.ALLINFO_BOOL, "true")
                         val args: MutableList<Pair<String, String>> = mutableListOf(firstPair, secondPair, thirdPair)
-                        Thread(ScanFileSheduler(false, "https://www.virustotal.com/vtapi/v2/file/report", args, this, "",
+                        Thread(ScanFileScheduler(false, "https://www.virustotal.com/vtapi/v2/file/report", args, this, "",
                                 (msg.obj as JSONObject).getString("app_name"))).start()
                     }
                     GOT_SCAN_URL_RESULT -> {
@@ -90,10 +90,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             val detail = if (myElem.has("detail")) myElem.getString("detail") else ""
                             scans.add(URLScanServicesResult(elem, detected, result, detail))
                         }
-                        val scanedURL = ScanedURL(scanResult.getString("url"), scanResult.getString("scan_date"), scanResult.getString("verbose_msg"),
+                        val scanedURL = ScannedURL(scanResult.getString("url"), scanResult.getString("scan_date"), scanResult.getString("verbose_msg"),
                                 scanResult.getInt("positives"), scanResult.getInt("total"), scans)
                         MainApplication.urlDataManager.addURL(scanedURL)
-                        MainApplication.dbSheduler.executor.execute(DBURLWorker(applicationContext, "add", this, scanedURL, null))
+                        MainApplication.dbScheduler.executor.execute(DBURLWorker(applicationContext, "add", this, scanedURL, null))
                     }
                     GOT_SCAN_FILE_RESULT -> {
                         val scanResult: JSONObject = msg.obj as JSONObject
@@ -107,43 +107,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             val update = myElem.getString("update")
                             scans.add(FileScanServicesResult(elem, detected, version, result, update))
                         }
-                        val scanedFile = ScanedFile(scanResult.getString("app_name"), scanResult.getString("scan_date"), scanResult.getString("verbose_msg"),
+                        val scanedFile = ScannedFile(scanResult.getString("app_name"), scanResult.getString("scan_date"), scanResult.getString("verbose_msg"),
                                 scanResult.getInt("positives"), scanResult.getInt("total"), scans)
-                        MainApplication.dbSheduler.executor.execute(DBFileWorker(applicationContext, "add", this, scanedFile, null))
+                        MainApplication.dbScheduler.executor.execute(DBFileWorker(applicationContext, "add", this, scanedFile, null))
                     }
                     SUCCESED_WRITE_URL_TO_DB -> {
 
                     }
                     SUCCESED_WRITE_FILE_TO_DB -> {
-//                        val positives = (msg.obj as ScanedFile).numberPositives
-//                        if (positives == 0) {
-//                            var index = 0;
-//                            while (index < MainApplication.appDataManager.getAllInstalledApp().size()) {
-//                                val app = MainApplication.appDataManager.getAllInstalledApp().get(index)
-//                                if (app.appName.equals((msg.obj as ScanedFile).scanedFile)) {
-//                                    MainApplication.appDataManager.removeApp(app)
-//                                    app.result = "clean"
-//                                    MainApplication.appDataManager.addApp(app)
-//                                }
-//                            }
-//                        } else {
-//                            var index = 0;
-//                            while (index < MainApplication.appDataManager.getAllInstalledApp().size()) {
-//                                val app = MainApplication.appDataManager.getAllInstalledApp().get(index)
-//                                if (app.appName.equals((msg.obj as ScanedFile).scanedFile)) {
-//                                    MainApplication.appDataManager.removeApp(app)
-//                                    app.result = "bad"
-//                                    MainApplication.appDataManager.addApp(app)
-//                                }
-//                            }
-//                        }
-//                        if (result.text != null && result.text != "") {
-//                resultIcon.setImageResource(ic_app_checked_good)
-//                resultIcon.setColorFilter(Color.GREEN)
-//            } else {
-//                resultIcon.setImageResource(ic_app_unchecked)
-//                resultIcon.setColorFilter(Color.BLACK)
-//            }
                     }
                     SUCCESED_READ_URL_FROM_DB -> {
 
@@ -151,26 +122,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         when (existingFragment) {
                             is SingleURLAnalysResult -> {
                                 if (existingFragment.isVisible) {
-                                    addResultsServices((msg.obj as ScanedURL).scans)
+                                    addResultsServices((msg.obj as ScannedURL).scans)
                                 }
                             }
                         }
-
-                        //addResultsServices((msg.obj as ScanedURL).scans)
-                        MainApplication.singleURLResultController.liveData.postValue((msg.obj as ScanedURL))
+                        MainApplication.singleURLResultController.liveData.postValue((msg.obj as ScannedURL))
                     }
                     SUCCESED_READ_FILE_FROM_DB -> {
                         val existingFragment = supportFragmentManager?.findFragmentById(R.id.fragment_container)
                         when (existingFragment) {
                             is SingleAppAnalysResult -> {
                                 if (existingFragment.isVisible) {
-                                    addResultsAppServices((msg.obj as ScanedFile).scans)
+                                    addResultsAppServices((msg.obj as ScannedFile).scans)
                                 }
                             }
                         }
-
-                        //addResultsServices((msg.obj as ScanedURL).scans)
-                        MainApplication.singleFileResultController.liveData.postValue((msg.obj as ScanedFile))
+                        MainApplication.singleFileResultController.liveData.postValue((msg.obj as ScannedFile))
                     }
 
                     else -> {
@@ -268,9 +235,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         lateinit var mainHandler: Handler
     }
 
-    fun test( view: View) {
+    fun test(view: View) {
 
-        router.navigateTo(fragmentFactory =  {
+        router.navigateTo(fragmentFactory = {
             val singleURLResult = SingleURLAnalysResult()
             val bundle = Bundle()
             bundle.putString("url", view.findViewById<TextView>(R.id.card_title).text as String)

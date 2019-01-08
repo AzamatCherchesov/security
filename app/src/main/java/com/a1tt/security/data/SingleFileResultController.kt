@@ -4,9 +4,9 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 
 class SingleFileResultController {
-    val liveData = MutableLiveData<ScanedFile>()
+    val liveData = MutableLiveData<ScannedFile>()
 
-    fun getData(): LiveData<ScanedFile> {
+    fun getData(): LiveData<ScannedFile> {
         return liveData
     }
 }

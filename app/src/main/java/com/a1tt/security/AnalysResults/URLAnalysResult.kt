@@ -7,7 +7,6 @@ import android.support.v7.util.ListUpdateCallback
 import android.support.v7.util.SortedList
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -15,11 +14,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.a1tt.security.MainApplication
 import com.a1tt.security.R
-import com.a1tt.security.data.ScanedURL
+import com.a1tt.security.data.ScannedURL
 
 class URLAnalysResult : Fragment() {
 
-    private lateinit var cardsRecycler: RecyclerView
+    private lateinit var mRecycler: RecyclerView
     private lateinit var mAdapter: TargetURLAdapter
 
     override fun onDetach() {
@@ -36,17 +35,17 @@ class URLAnalysResult : Fragment() {
         (activity as AppCompatActivity).findViewById<View>(R.id.search)?.visibility = GONE
 
         val view = inflater.inflate(R.layout.cards_fragment_layout, container, false)
-        cardsRecycler = view.findViewById<View>(R.id.cards_recycler) as RecyclerView
-        cardsRecycler.layoutManager =
+        mRecycler = view.findViewById<View>(R.id.cards_recycler) as RecyclerView
+        mRecycler.layoutManager =
                 LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         mAdapter = TargetURLAdapter()
-        cardsRecycler.adapter = mAdapter
+        mRecycler.adapter = mAdapter
         return view
     }
 
 
     inner class TargetURLAdapter : RecyclerView.Adapter<TargetURLViewHolder>() {
-        private val scanedURLs: SortedList<ScanedURL>
+        private val scanedURLs: SortedList<ScannedURL>
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TargetURLViewHolder {
             val view =
@@ -56,7 +55,7 @@ class URLAnalysResult : Fragment() {
         }
 
         override fun onBindViewHolder(holder: TargetURLViewHolder, position: Int) {
-            holder.title.text = scanedURLs[position].scanedURL
+            holder.title.text = scanedURLs[position].scannedURL
             holder.message.text = scanedURLs[position].scanDate
         }
 
@@ -68,7 +67,7 @@ class URLAnalysResult : Fragment() {
             MainApplication.urlDataManager.unSubscribe(mListUpdateCallback)
         }
 
-        val mListUpdateCallback : ListUpdateCallback = object : ListUpdateCallback {
+        val mListUpdateCallback: ListUpdateCallback = object : ListUpdateCallback {
             override fun onChanged(p0: Int, p1: Int, p2: Any?) {
                 activity?.runOnUiThread {
                     this@TargetURLAdapter.notifyItemRangeChanged(p0, p1, p2)
@@ -92,7 +91,6 @@ class URLAnalysResult : Fragment() {
                     this@TargetURLAdapter.notifyItemRangeRemoved(p0, p1)
                 }
             }
-
         }
 
         init {

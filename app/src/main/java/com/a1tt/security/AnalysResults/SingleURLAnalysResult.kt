@@ -14,14 +14,14 @@ import com.a1tt.security.MainActivity.Companion.mainHandler
 import com.a1tt.security.MainApplication
 import com.a1tt.security.MainApplication.Companion.singleURLResultController
 import com.a1tt.security.R
-import com.a1tt.security.data.ScanedURL
+import com.a1tt.security.data.ScannedURL
 import com.a1tt.security.data.URLScanServicesResult
 import com.a1tt.security.shedulers.DBURLWorker
 
 class SingleURLAnalysResult : Fragment() {
 
-    lateinit var myview : View
-    lateinit var targetApplicationRecyclerView: RecyclerView
+    lateinit var mAnalysView: View
+    lateinit var mRecyclerView: RecyclerView
 
 
     override fun onCreateView(
@@ -33,26 +33,24 @@ class SingleURLAnalysResult : Fragment() {
         (activity as AppCompatActivity).findViewById<View>(R.id.search)?.visibility = View.GONE
 
         val url = arguments?.getString("url", null)
-        MainApplication.dbSheduler.executor.execute(DBURLWorker(activity!!.applicationContext, "select", mainHandler, null, url))
-
-        myview = inflater.inflate(R.layout.test_layout, container, false)
+        MainApplication.dbScheduler.executor.execute(DBURLWorker(activity!!.applicationContext, "select", mainHandler, null, url))
+        mAnalysView = inflater.inflate(R.layout.single_url_analys_result, container, false)
 
         val liveData = singleURLResultController.getData()
-
-        liveData.observe(this@SingleURLAnalysResult,  Observer<ScanedURL> {
-            myview.findViewById<TextView>(R.id.urlView).text = it?.scanedURL
-            myview.findViewById<TextView>(R.id.scanDateView).text = it?.scanDate
-            myview.findViewById<TextView>(R.id.verboseMsg).text = it?.verboseMsg
-            myview.findViewById<TextView>(R.id.number1).text = it?.numberPositives.toString()
-            myview.findViewById<TextView>(R.id.number2).text = it?.numberTotal.toString()
+        liveData.observe(this@SingleURLAnalysResult, Observer<ScannedURL> {
+            mAnalysView.findViewById<TextView>(R.id.urlView).text = it?.scannedURL
+            mAnalysView.findViewById<TextView>(R.id.scanDateView).text = it?.scanDate
+            mAnalysView.findViewById<TextView>(R.id.verboseMsg).text = it?.verboseMsg
+            mAnalysView.findViewById<TextView>(R.id.number1).text = it?.numberPositives.toString()
+            mAnalysView.findViewById<TextView>(R.id.number2).text = it?.numberTotal.toString()
         })
 
-        targetApplicationRecyclerView = myview.findViewById(R.id.scans_recycler) as RecyclerView
-        targetApplicationRecyclerView.layoutManager = LinearLayoutManager(activity)
+        mRecyclerView = mAnalysView.findViewById(R.id.scans_recycler) as RecyclerView
+        mRecyclerView.layoutManager = LinearLayoutManager(activity)
 
         mAdapter = TargetURLAdapter()
-        targetApplicationRecyclerView.adapter = mAdapter
-        return myview
+        mRecyclerView.adapter = mAdapter
+        return mAnalysView
     }
 
     inner class TargetURLHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -71,11 +69,8 @@ class SingleURLAnalysResult : Fragment() {
         }
 
         override fun getItemCount(): Int {
-//            return 20
             return scanServicesList.size
         }
-
-
 
         override fun onBindViewHolder(holder: TargetURLHolder, position: Int) {
             holder.service_name.text = scanServicesList[position].serviceName
@@ -83,8 +78,6 @@ class SingleURLAnalysResult : Fragment() {
             holder.service_result.text = scanServicesList[position].result
             holder.service_detail.text = scanServicesList[position].detail
         }
-
-
     }
 
     companion object {
@@ -92,6 +85,7 @@ class SingleURLAnalysResult : Fragment() {
             scanServicesList = items
             mAdapter.notifyDataSetChanged()
         }
+
         lateinit var mAdapter: TargetURLAdapter
         var scanServicesList: MutableList<URLScanServicesResult> = mutableListOf<URLScanServicesResult>()
     }
