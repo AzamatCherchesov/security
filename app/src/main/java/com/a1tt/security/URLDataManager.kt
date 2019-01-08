@@ -4,7 +4,7 @@ import android.support.v7.util.SortedList
 import com.a1tt.security.data.ScannedURL
 
 class URLDataManager : Observable() {
-    private var mScanedURLs: SortedList<ScannedURL> = SortedList<ScannedURL>(ScannedURL::class.java, object : SortedList.Callback<ScannedURL>() {
+    private var mScannedURLs: SortedList<ScannedURL> = SortedList<ScannedURL>(ScannedURL::class.java, object : SortedList.Callback<ScannedURL>() {
         override fun areItemsTheSame(p0: ScannedURL?, p1: ScannedURL?): Boolean {
             return p0?.scannedURL.equals(p1?.scannedURL)
         }
@@ -35,17 +35,17 @@ class URLDataManager : Observable() {
 
     })
 
-    fun addURL(scanedURL: ScannedURL) {
-        mScanedURLs.add(scanedURL)
+    fun addURL(scannedURL: ScannedURL) {
+        mScannedURLs.add(scannedURL)
 
     }
 
-    fun removeURL(scanedURL: ScannedURL) {
-        mScanedURLs.remove(scanedURL)
+    fun removeURL(scannedURL: ScannedURL) {
+        mScannedURLs.remove(scannedURL)
     }
 
-    fun getAllScanedURLs(): SortedList<ScannedURL> {
-        return mScanedURLs
+    fun getAllScannedURLs(): SortedList<ScannedURL> {
+        return mScannedURLs
     }
 
 }

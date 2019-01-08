@@ -10,26 +10,23 @@ import com.a1tt.security.data.URLScanServicesResult
 import java.lang.Thread.sleep
 
 
-class DBURLWorker(val context: Context, val command: String, val handler: Handler?, val scanedURL: ScannedURL?, val selectionString: String?) : Runnable {
+class DBURLWorker(val context: Context, private val command: String, private val handler: Handler?, private val scannedURL: ScannedURL?, private val selectionString: String?) : Runnable {
     override fun run() {
-        Log.e("A1tt", "DBWorker " + command)
-        Thread.sleep(1000)
-
         when (command) {
             "add" -> {
                 val cv = ContentValues()
 
-                cv.put("url", scanedURL?.scannedURL)
-                cv.put("scan_date", scanedURL?.scanDate)
-                cv.put("verbose_msg", scanedURL?.verboseMsg)
-                cv.put("number_positives", scanedURL?.numberPositives)
-                cv.put("number_total", scanedURL?.numberTotal)
+                cv.put("url", scannedURL?.scannedURL)
+                cv.put("scan_date", scannedURL?.scanDate)
+                cv.put("verbose_msg", scannedURL?.verboseMsg)
+                cv.put("number_positives", scannedURL?.numberPositives)
+                cv.put("number_total", scannedURL?.numberTotal)
                 // вставляем запись и получаем ее ID
                 val rowID = DBScheduler.db.insert("mytable", null, cv)
 
-                for (elem in scanedURL?.scans!!) {
+                for (elem in scannedURL?.scans!!) {
                     val addCV = ContentValues()
-                    addCV.put("url", scanedURL.scannedURL)
+                    addCV.put("url", scannedURL.scannedURL)
                     addCV.put("service", elem.serviceName)
                     addCV.put("detected", elem.detected.toString())
                     addCV.put("result", elem.result)
@@ -58,10 +55,10 @@ class DBURLWorker(val context: Context, val command: String, val handler: Handle
                     val scans = mutableListOf<URLScanServicesResult>()
 
                     do {
-                        val scanedURL = ScannedURL(c.getString(urlColIndex), c.getString(scanDateColIndex), c.getString(verboseMsgColIndex), c.getInt(numberPositivesColIndex),
+                        val scannedURL = ScannedURL(c.getString(urlColIndex), c.getString(scanDateColIndex), c.getString(verboseMsgColIndex), c.getInt(numberPositivesColIndex),
                                 c.getInt(numberTotalColIndex), scans)
 
-                        handler?.sendMessage(handler.obtainMessage(Constants.SUCCESED_READ_URL_FROM_DB, scanedURL))
+                        handler?.sendMessage(handler.obtainMessage(Constants.SUCCESED_READ_URL_FROM_DB, scannedURL))
                     } while (c.moveToNext())
                 } else
                     Log.d("a1tt", "0 rows")
@@ -92,10 +89,10 @@ class DBURLWorker(val context: Context, val command: String, val handler: Handle
                     addC.close()
 
                     do {
-                        val scanedURL = ScannedURL(c.getString(urlColIndex), c.getString(scanDateColIndex), c.getString(verboseMsgColIndex), c.getInt(numberPositivesColIndex),
+                        val scannedURL = ScannedURL(c.getString(urlColIndex), c.getString(scanDateColIndex), c.getString(verboseMsgColIndex), c.getInt(numberPositivesColIndex),
                                 c.getInt(numberTotalColIndex), scans)
 
-                        handler?.sendMessage(handler.obtainMessage(Constants.SUCCESED_READ_URL_FROM_DB, scanedURL))
+                        handler?.sendMessage(handler.obtainMessage(Constants.SUCCESED_READ_URL_FROM_DB, scannedURL))
                     } while (c.moveToNext())
                     sleep(10000)
                 }

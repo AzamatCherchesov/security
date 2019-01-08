@@ -45,7 +45,7 @@ class URLAnalysResult : Fragment() {
 
 
     inner class TargetURLAdapter : RecyclerView.Adapter<TargetURLViewHolder>() {
-        private val scanedURLs: SortedList<ScannedURL>
+        private val scannedURLs: SortedList<ScannedURL>
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TargetURLViewHolder {
             val view =
@@ -55,12 +55,12 @@ class URLAnalysResult : Fragment() {
         }
 
         override fun onBindViewHolder(holder: TargetURLViewHolder, position: Int) {
-            holder.title.text = scanedURLs[position].scannedURL
-            holder.message.text = scanedURLs[position].scanDate
+            holder.title.text = scannedURLs[position].scannedURL
+            holder.message.text = scannedURLs[position].scanDate
         }
 
         override fun getItemCount(): Int {
-            return scanedURLs.size()
+            return scannedURLs.size()
         }
 
         fun unsubscribe() {
@@ -94,7 +94,7 @@ class URLAnalysResult : Fragment() {
         }
 
         init {
-            scanedURLs = MainApplication.urlDataManager.getAllScanedURLs()
+            scannedURLs = MainApplication.urlDataManager.getAllScannedURLs()
             MainApplication.urlDataManager.observe(mListUpdateCallback)
         }
     }

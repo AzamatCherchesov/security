@@ -21,7 +21,7 @@
             style="@style/Base.TextAppearance.AppCompat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Scaned file:"
+            android:text="Scanned file:"
             android:layout_below="@+id/analysedAppIcon"
             android:textSize="18sp" />
 
@@ -38,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/fileView"
-            android:text="Last scaned at:"
+            android:text="Last scanned at:"
             android:textSize="18sp" />
 
         <TextView

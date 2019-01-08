@@ -90,10 +90,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             val detail = if (myElem.has("detail")) myElem.getString("detail") else ""
                             scans.add(URLScanServicesResult(elem, detected, result, detail))
                         }
-                        val scanedURL = ScannedURL(scanResult.getString("url"), scanResult.getString("scan_date"), scanResult.getString("verbose_msg"),
+                        val scannedURL = ScannedURL(scanResult.getString("url"), scanResult.getString("scan_date"), scanResult.getString("verbose_msg"),
                                 scanResult.getInt("positives"), scanResult.getInt("total"), scans)
-                        MainApplication.urlDataManager.addURL(scanedURL)
-                        MainApplication.dbScheduler.executor.execute(DBURLWorker(applicationContext, "add", this, scanedURL, null))
+                        MainApplication.urlDataManager.addURL(scannedURL)
+                        MainApplication.dbScheduler.executor.execute(DBURLWorker(applicationContext, "add", this, scannedURL, null))
                     }
                     GOT_SCAN_FILE_RESULT -> {
                         val scanResult: JSONObject = msg.obj as JSONObject
@@ -107,9 +107,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             val update = myElem.getString("update")
                             scans.add(FileScanServicesResult(elem, detected, version, result, update))
                         }
-                        val scanedFile = ScannedFile(scanResult.getString("app_name"), scanResult.getString("scan_date"), scanResult.getString("verbose_msg"),
+                        val scannedFile = ScannedFile(scanResult.getString("app_name"), scanResult.getString("scan_date"), scanResult.getString("verbose_msg"),
                                 scanResult.getInt("positives"), scanResult.getInt("total"), scans)
-                        MainApplication.dbScheduler.executor.execute(DBFileWorker(applicationContext, "add", this, scanedFile, null))
+                        MainApplication.dbScheduler.executor.execute(DBFileWorker(applicationContext, "add", this, scannedFile, null))
                     }
                     SUCCESED_WRITE_URL_TO_DB -> {
 
